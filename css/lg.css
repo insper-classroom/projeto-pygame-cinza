@@ -8,7 +8,7 @@ body{
   margin:  0;
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  background-color: #ffe9ef;
+  background-color: #1a114bc5;
 }
 h1{
   font-size: 1.7em;
@@ -18,12 +18,28 @@ h1{
 }
 h2{
   text-transform: uppercase;
+  color: white;
+
+}
+div{
+  color: white;
+
+}
+.asj{
+  color: white;
+
 }
 h4{
   font-size: .8em;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
+  color: white;
+
+}
+h5{
+  color: white;
+
 }
 h6{
   font-weight: 500;
@@ -51,7 +67,7 @@ section{
 .line{  
   width: 3em;
   height: 1px;
-  background-color: #000;
+  background-color: white;
   margin-right: 1em;
 }
 .line.line-right{
@@ -62,6 +78,7 @@ section{
 .btn{
   display: inline-block;
   padding: .5em 1.5em;
+  color: white;
   border: solid 1px #090b08;  
   transition: all .3s ease-in;
 }
@@ -79,11 +96,12 @@ header{
   width: 100%;
   justify-content: space-around;
   z-index: 1;
+  
 }
 header:before{
   content: "";
   position: absolute;
-  background-color: #ffe9ef;
+  background-color: #1a114bc5;
   width: 100%;
   height: 68%;
   z-index: -1;
@@ -119,7 +137,7 @@ input[type="checkbox"]:checked ~ .navbar{
   position: absolute;
   width: 100%;
   height: 100vh;
-  background-color: #ffe9ef;
+  background-color: #1a114bc5;
   justify-content: space-evenly;
   align-items: center;
   z-index: -2;
@@ -133,6 +151,7 @@ input[type="checkbox"]:checked ~ .navbar{
 }
 a.nav-link{
   margin-right: 0;
+  color: white;
 }
 a.nav-link:hover,
 a.nav-link:active,
@@ -150,9 +169,13 @@ a.nav-link:focus{
 .social-menu li a{
   margin: 0 .5em;
   padding: .5em;
+  color: white;
+
 }
 .social-menu li a{
   font-size: 1.2em;
+  color: white;
+
 }
 .social-menu li a:hover,
 .social-menu li a:active,
@@ -163,20 +186,31 @@ a.nav-link:focus{
 
 
 .hero {
+  background-image: none;
+  justify-content: center;
+  overflow: hidden;
+  color: white;
 	display: flex;
 	height: 100vh;
 	align-items: center;
-	background: #f5d9d6 url("https://i.postimg.cc/Nff8pQkJ/Bege-Flor-Superminimalismo-Texto-Curvado-Logotipo-6.png") no-repeat right bottom;
+	background: #1a114bc5 url("https://i.postimg.cc/Nff8pQkJ/Bege-Flor-Superminimalismo-Texto-Curvado-Logotipo-6.png") no-repeat right bottom;
 }
-.hero-img img{
-  display: none;
-}
+
 .hero-text{
   padding: 0 2em 7.5em;
 }
 
+.hero-img img{
+  margin: 100px;
+  display: flex;
+  width: 40em;
+  height: 40em;
+}
+
+
 #featured .image img{
   width: 100%;
+  
   height: auto;
 }
 .text{
@@ -187,13 +221,15 @@ a.nav-link:focus{
   text-align: justify;
   padding-bottom: 1em;
   line-height: 1.4em;
+  color: white;
+  
 }
 
 .box{
   display: block;
   position: relative;
   padding: 1.3em;
-  background-color: #f5d9d6;
+  background-color: #261D54;
   text-align: center;
   margin-bottom: 2em;
 }
@@ -218,7 +254,7 @@ a.nav-link:focus{
 }
 
 #about{
-  background-color: #f5d9d6;
+  background-color: #261D54;
 }
 section#about{
   padding-bottom: 5.8em;
@@ -234,7 +270,7 @@ section#about{
 }
 .video-wrapper{
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 100px; /* 16:9 */
   overflow: hidden;
   height: 0;
 }
@@ -314,6 +350,8 @@ input{
   flex: 1 0 50%;
 }
 .copy-wrapper a{
+  color: white;
+
   font-weight: 700;
 }
 
@@ -325,22 +363,6 @@ input{
     font-size: 2em;
   }
   
-  .hero{
-    background-image: none;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .hero-img{
-    padding-top: 6.5em;
-  }
-  .hero-img img{
-    display: block;
-    width: 14em;
-    height: auto;
-  }
-  .hero-text{
-    padding: 0 2em;
-  }
   .text{
     margin: 2em 2em auto;
   }
@@ -417,14 +439,21 @@ input{
     margin: 0 4em;
   }
   
+  #about {
+    height: 1000px;
+  }
   #about .wrapper{
     display: block;
+    height: 100%;
+    color: #261D54;
   }
   #about .text{
     margin-right: 4em;
+    
   }
   .video-wrapper{
     margin: auto 4em;
+    height: 100%;
   }
   
   #contact .wrapper{
@@ -480,6 +509,8 @@ input{
   }  
   .title.title-left{
     margin-left: -2.5em;
+    color: white;
+
   }
   .title.title-right{
     margin-right: -2.5em;
@@ -487,9 +518,7 @@ input{
   .line{
     width: 5.5em;
   }
-  .hero-img img{
-    width: 14.5em;
-  }
+ 
   
   #featured .image{
     margin-top: -2em;
@@ -520,9 +549,7 @@ input{
     padding: 5.8em 11em 0;
   }
   
-  .hero-img img{
-    width: 15.5em;
-  }
+
   
   #featured .image{
     margin-top: -4em;
