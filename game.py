@@ -56,7 +56,8 @@ def desenha(window, assets, state):
     
     window.blit(assets['background'], (0, 0))
     # window.blit(assets['ponte'], (0, 0))
-    
+    retangulo = pygame.Rect((0, 312), (665, 29))
+    pygame.draw.rect(window, 'red', retangulo)
     pygame.display.update()  # Atualiza a tela
 
 # Loop principal do jogo
