@@ -93,7 +93,13 @@ class Barrel(pygame.sprite.Sprite):
         self.bottom = self.rect
 
     def update(self):
-        pass
+        if self.y_change < 8 and not self.falling:
+            barrel.y_change += 2
+        for i in range(len(plats)):
+            if self.bottom.colliderect(plats[i]):
+                self.y_change = 0
+                self.falling = False
+        # if self.rect.colliderect(oil_drum):
 
     def check_fall(self):
         pass
@@ -175,19 +181,21 @@ def draw_screen():
 
 barrels = pygame.sprite.Group()
 
-
-
 run = True
 while run:
     screen.fill('black')
     timer.tick(fps)
     if barrel_count < barrel_spawn_time:
-        barrel_count += 1
+        barrel_count += 1 
     else:
         barrel_count = random.randint(0, 120)
         barrel_time = barrel_count - barrel_spawn_time
         barrel = Barrel(270, 270)
         barrels.add(barrel)
+    for barrel in barrels:
+        barrel.draw()
+        barrel.check_fall()
+    barrels.update()
     # draw platforms and ladders on the screen in dedicated function
     plats, lads = draw_screen()
 
