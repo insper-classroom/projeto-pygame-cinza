@@ -14,10 +14,29 @@ def inicializa():
 
     # Carrega as imagens do campo de estrelas e da nave espacial
     assets = {}
-    assets['background'] = pygame.image.load('assets/img/background.png')
+    assets['background'] = pygame.image.load('assets/img/stages_cortada.png').convert_alpha()
     assets['background'] = pygame.transform.scale(assets['background'], dimensoes)
     assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
     assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
+
+
+    # assets['new_back'].set_colorkey((255,27,84))
+
+    # Defina a cor da plataforma (R, G, B)
+    platform_color = (255,27,84)  # Azul, por exemplo
+
+    # Crie uma máscara vazia do mesmo tamanho que a imagem
+    assets['mask'] = pygame.mask.Mask((assets['background'].get_width(), assets['background'].get_height()))
+
+    # Percorra cada pixel na imagem
+    for x in range(assets['background'].get_width()):
+        for y in range(assets['background'].get_height()):
+            # Verifique se a cor do pixel corresponde à cor da plataforma
+            if assets['background'].get_at((x, y))[:3] == platform_color:
+                # Se corresponder, adicione este pixel à máscara
+                assets['mask'].set_at((x, y), 1)
+
+    assets['new_back'] = assets['mask'].to_surface()
 
 
 
@@ -54,22 +73,22 @@ def recebe_eventos(state, window):
 
 def desenha(window, assets, state):
     
-    window.blit(assets['background'], (0, 0))
+    window.blit(assets['new_back'], (0, 0))
     # window.blit(assets['ponte'], (0, 0))
-    retangulo = pygame.Rect((0, 312), (665, 29))
-    retangulo1 = pygame.Rect((52, 405), (665, 29))
-    retangulo2 = pygame.Rect((0, 528), (665, 29))
-    retangulo3 = pygame.Rect((52, 650), (665, 29))
-    retangulo4 = pygame.Rect((0, 774), (665, 29))
-    retangulo5 = pygame.Rect((0, 895), (720, 29))
+    # retangulo = pygame.Rect((0, 312), (665, 29))
+    # retangulo1 = pygame.Rect((52, 405), (665, 29))
+    # retangulo2 = pygame.Rect((0, 528), (665, 29))
+    # retangulo3 = pygame.Rect((52, 650), (665, 29))
+    # retangulo4 = pygame.Rect((0, 774), (665, 29))
+    # retangulo5 = pygame.Rect((0, 895), (720, 29))
 
 
-    pygame.draw.rect(window, 'red', retangulo)
-    pygame.draw.rect(window, 'red', retangulo1)
-    pygame.draw.rect(window, 'red', retangulo2)
-    pygame.draw.rect(window, 'red', retangulo3)
-    pygame.draw.rect(window, 'red', retangulo4)
-    pygame.draw.rect(window, 'red', retangulo5)
+    # pygame.draw.rect(window, 'red', retangulo)
+    # pygame.draw.rect(window, 'red', retangulo1)
+    # pygame.draw.rect(window, 'red', retangulo2)
+    # pygame.draw.rect(window, 'red', retangulo3)
+    # pygame.draw.rect(window, 'red', retangulo4)
+    # pygame.draw.rect(window, 'red', retangulo5)
 
 
     pygame.display.update()  # Atualiza a tela
