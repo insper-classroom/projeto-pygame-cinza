@@ -14,8 +14,8 @@ def inicializa():
 
     # Carrega as imagens do campo de estrelas e da nave espacial
     assets = {}
-    assets['starfield'] = pygame.image.load('assets/img/starfield.png')
-    assets['starfield'] = pygame.transform.scale(assets['starfield'], dimensoes)
+    assets['background'] = pygame.image.load('assets/img/background.png')
+    assets['background'] = pygame.transform.scale(assets['background'], dimensoes)
     assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
     assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
 
@@ -54,7 +54,7 @@ def recebe_eventos(state, window):
 
 def desenha(window, assets, state):
     
-    window.blit(assets['starfield'], (0, 0))
+    window.blit(assets['background'], (0, 0))
     window.blit(assets['ponte'], (0, 0))
     
     pygame.display.update()  # Atualiza a tela
