@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 
-dimensoes = (1680, 1050)  # Define as dimensões da janela do jogo
+dimensoes = (720, 950)  # Define as dimensões da janela do jogo
 
 # Inicializa o Pygame e carrega os recursos necessários
 def inicializa():
@@ -55,7 +55,7 @@ def recebe_eventos(state, window):
 def desenha(window, assets, state):
     
     window.blit(assets['background'], (0, 0))
-    window.blit(assets['ponte'], (0, 0))
+    # window.blit(assets['ponte'], (0, 0))
     
     pygame.display.update()  # Atualiza a tela
 
