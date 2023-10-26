@@ -57,7 +57,21 @@ def desenha(window, assets, state):
     window.blit(assets['background'], (0, 0))
     # window.blit(assets['ponte'], (0, 0))
     retangulo = pygame.Rect((0, 312), (665, 29))
+    retangulo1 = pygame.Rect((52, 405), (665, 29))
+    retangulo2 = pygame.Rect((0, 528), (665, 29))
+    retangulo3 = pygame.Rect((52, 650), (665, 29))
+    retangulo4 = pygame.Rect((0, 774), (665, 29))
+    retangulo5 = pygame.Rect((0, 895), (720, 29))
+
+
     pygame.draw.rect(window, 'red', retangulo)
+    pygame.draw.rect(window, 'red', retangulo1)
+    pygame.draw.rect(window, 'red', retangulo2)
+    pygame.draw.rect(window, 'red', retangulo3)
+    pygame.draw.rect(window, 'red', retangulo4)
+    pygame.draw.rect(window, 'red', retangulo5)
+
+
     pygame.display.update()  # Atualiza a tela
 
 # Loop principal do jogo
