@@ -21,7 +21,7 @@ def inicializa():
     assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
     assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
 
-
+    
 
     # # assets['new_back'].set_colorkey((255,27,84))
 
