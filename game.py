@@ -14,30 +14,30 @@ def inicializa():
 
     # Carrega as imagens do campo de estrelas e da nave espacial
     assets = {}
-    assets['background'] = pygame.image.load('assets/img/stages_cortada.png').convert_alpha()
+    assets['background'] = pygame.image.load('assets/img/background.png').convert_alpha()
     assets['background'] = pygame.transform.scale(assets['background'], dimensoes)
     assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
     assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
-    assets
+    
 
 
-    # assets['new_back'].set_colorkey((255,27,84))
+    # # assets['new_back'].set_colorkey((255,27,84))
 
-    # Defina a cor da plataforma (R, G, B)
-    platform_color = (255,27,84)  # Azul, por exemplo
+    # # Defina a cor da plataforma (R, G, B)
+    # platform_color = (255,27,84)  # Azul, por exemplo
 
-    # Crie uma máscara vazia do mesmo tamanho que a imagem
-    assets['mask'] = pygame.mask.Mask((assets['background'].get_width(), assets['background'].get_height()))
+    # # Crie uma máscara vazia do mesmo tamanho que a imagem
+    # assets['mask'] = pygame.mask.Mask((assets['background'].get_width(), assets['background'].get_height()))
 
-    # Percorra cada pixel na imagem
-    for x in range(assets['background'].get_width()):
-        for y in range(assets['background'].get_height()):
-            # Verifique se a cor do pixel corresponde à cor da plataforma
-            if assets['background'].get_at((x, y))[:3] == platform_color:
-                # Se corresponder, adicione este pixel à máscara
-                assets['mask'].set_at((x, y), 1)
+    # # Percorra cada pixel na imagem
+    # for x in range(assets['background'].get_width()):
+    #     for y in range(assets['background'].get_height()):
+    #         # Verifique se a cor do pixel corresponde à cor da plataforma
+    #         if assets['background'].get_at((x, y))[:3] == platform_color:
+    #             # Se corresponder, adicione este pixel à máscara
+    #             assets['mask'].set_at((x, y), 1)
 
-    assets['new_back'] = assets['mask'].to_surface()
+    # assets['new_back'] = assets['mask'].to_surface()
 
 
 
@@ -53,6 +53,17 @@ def inicializa():
 
     }
 
+    escadas = {
+    'escada': pygame.Rect((203, 120), (28, 193)),
+    'escada1': pygame.Rect((254, 120), (28, 193)),
+    'escada2': pygame.Rect((410, 237), (28, 75)),
+    'escada3': pygame.Rect((623, 341), (28, 65)),
+    'escada4': pygame.Rect((71, 435), (28, 95)),
+    'escada5': pygame.Rect((595, 555), (28, 95)),
+    'escada6': pygame.Rect((99, 678), (28, 95)),
+    'escada7': pygame.Rect((554, 802), (28, 95))
+    }
+
     # Inicializa o estado do jogo
     state = {
         't0': -1,   # Tempo inicial
@@ -60,7 +71,7 @@ def inicializa():
 
 
 
-    return window, assets, state, retangulos
+    return window, assets, state, retangulos, escadas
     
 # Recebe eventos do Pygame
 def recebe_eventos(state, window):
@@ -86,52 +97,29 @@ def recebe_eventos(state, window):
 
 
 
-def desenha(window, assets, state, retangulos):
+def desenha(window, assets, state, retangulos, escadas):
     
-
 
     for retangulo in retangulos.values():
         pygame.draw.rect(window, 'red', retangulo)
     
-    window.blit(assets['new_back'], (0, 0))
-    # window.blit(assets['ponte'], (0, 0))
+    # window.blit(assets['new_back'], (0, 0))
+    # # window.blit(assets['ponte'], (0, 0))
 
+    for escada in escadas.values():
+        pygame.draw.rect(window, 'blue', escada)
 
-    
-    escada = pygame.Rect((203, 120), (28, 193))
-    escada1 = pygame.Rect((254, 120), (28, 193))
-    escada2 = pygame.Rect((410, 237), (28, 75))
-    escada3 = pygame.Rect((623, 341), (28, 65))
-    escada4 = pygame.Rect((71, 435), (28, 95))
-    escada5 = pygame.Rect((595, 555), (28, 95))
-    escada6 = pygame.Rect((99, 678), (28, 95))
-    escada7 = pygame.Rect((99, 878), (28, 95))
-
-
-    pygame.draw.rect(window, 'blue', escada)
-    pygame.draw.rect(window, 'blue', escada1)
-    pygame.draw.rect(window, 'blue', escada2)
-    pygame.draw.rect(window, 'blue', escada3)
-    pygame.draw.rect(window, 'blue', escada4)
-    pygame.draw.rect(window, 'blue', escada5)
-    pygame.draw.rect(window, 'blue', escada6)
-    pygame.draw.rect(window, 'blue', escada7)
-
-
-
-
-
-
+    window.blit(assets['background'], (0, 0))
 
     pygame.display.update()  # Atualiza a tela
 
 # Loop principal do jogo
-def game_loop(window, assets, state, retangulos):
+def game_loop(window, assets, state, retangulos, escadas):
     
     while recebe_eventos(state, window):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
-        desenha(window, assets, state, retangulos)
+        desenha(window, assets, state, retangulos, escadas)
 
 if __name__ == '__main__':
     
-    w, assets, state, retangulos = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
-    game_loop(w, assets, state, retangulos)  # Inicia o loop principal do jogo
+    w, assets, state, retangulos, escadas = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
+    game_loop(w, assets, state, retangulos, escadas)  # Inicia o loop principal do jogo
