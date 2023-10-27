@@ -18,8 +18,7 @@ def inicializa():
     assets['background'] = pygame.transform.scale(assets['background'], dimensoes)
     assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
     assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
-    assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
-    assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
+    
     
 
 
@@ -112,7 +111,6 @@ def desenha(window, assets, state, retangulos, escadas):
         pygame.draw.rect(window, 'blue', escada)
 
     window.blit(assets['background'], (0, 0))
-    window.blit(assets['gorila'],(0,215))
 
     pygame.display.update()  # Atualiza a tela
 
