@@ -18,6 +18,7 @@ def inicializa():
     assets['background'] = pygame.transform.scale(assets['background'], dimensoes)
     assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
     assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
+    assets
 
 
     # assets['new_back'].set_colorkey((255,27,84))
@@ -40,6 +41,18 @@ def inicializa():
 
 
 
+
+    retangulos = {
+    'retangulo': pygame.Rect((0, 312), (665, 29)),
+    'retangulo1': pygame.Rect((52, 405), (665, 29)),
+    'retangulo2': pygame.Rect((0, 528), (665, 29)),
+    'retangulo3': pygame.Rect((52, 650), (665, 29)),
+    'retangulo4': pygame.Rect((0, 774), (665, 29)),
+    'retangulo5': pygame.Rect((0, 895), (720, 29)),
+    'retangulo6': pygame.Rect((282, 210), (153, 28))
+
+    }
+
     # Inicializa o estado do jogo
     state = {
         't0': -1,   # Tempo inicial
@@ -47,7 +60,7 @@ def inicializa():
 
 
 
-    return window, assets, state
+    return window, assets, state, retangulos
     
 # Recebe eventos do Pygame
 def recebe_eventos(state, window):
@@ -61,6 +74,8 @@ def recebe_eventos(state, window):
     state['fps'] = fps
 
 
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # Se o evento QUIT foi acionado, retorna False
             return False
@@ -71,35 +86,52 @@ def recebe_eventos(state, window):
 
 
 
-def desenha(window, assets, state):
+def desenha(window, assets, state, retangulos):
+    
+
+
+    for retangulo in retangulos.values():
+        pygame.draw.rect(window, 'red', retangulo)
     
     window.blit(assets['new_back'], (0, 0))
     # window.blit(assets['ponte'], (0, 0))
-    # retangulo = pygame.Rect((0, 312), (665, 29))
-    # retangulo1 = pygame.Rect((52, 405), (665, 29))
-    # retangulo2 = pygame.Rect((0, 528), (665, 29))
-    # retangulo3 = pygame.Rect((52, 650), (665, 29))
-    # retangulo4 = pygame.Rect((0, 774), (665, 29))
-    # retangulo5 = pygame.Rect((0, 895), (720, 29))
 
 
-    # pygame.draw.rect(window, 'red', retangulo)
-    # pygame.draw.rect(window, 'red', retangulo1)
-    # pygame.draw.rect(window, 'red', retangulo2)
-    # pygame.draw.rect(window, 'red', retangulo3)
-    # pygame.draw.rect(window, 'red', retangulo4)
-    # pygame.draw.rect(window, 'red', retangulo5)
+    
+    escada = pygame.Rect((203, 120), (28, 193))
+    escada1 = pygame.Rect((254, 120), (28, 193))
+    escada2 = pygame.Rect((410, 237), (28, 75))
+    escada3 = pygame.Rect((623, 341), (28, 65))
+    escada4 = pygame.Rect((71, 435), (28, 95))
+    escada5 = pygame.Rect((595, 555), (28, 95))
+    escada6 = pygame.Rect((99, 678), (28, 95))
+    escada7 = pygame.Rect((99, 878), (28, 95))
+
+
+    pygame.draw.rect(window, 'blue', escada)
+    pygame.draw.rect(window, 'blue', escada1)
+    pygame.draw.rect(window, 'blue', escada2)
+    pygame.draw.rect(window, 'blue', escada3)
+    pygame.draw.rect(window, 'blue', escada4)
+    pygame.draw.rect(window, 'blue', escada5)
+    pygame.draw.rect(window, 'blue', escada6)
+    pygame.draw.rect(window, 'blue', escada7)
+
+
+
+
+
 
 
     pygame.display.update()  # Atualiza a tela
 
 # Loop principal do jogo
-def game_loop(window, assets, state):
+def game_loop(window, assets, state, retangulos):
     
     while recebe_eventos(state, window):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
-        desenha(window, assets, state)
+        desenha(window, assets, state, retangulos)
 
 if __name__ == '__main__':
     
-    w, assets, state = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
-    game_loop(w, assets, state)  # Inicia o loop principal do jogo
+    w, assets, state, retangulos = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
+    game_loop(w, assets, state, retangulos)  # Inicia o loop principal do jogo
