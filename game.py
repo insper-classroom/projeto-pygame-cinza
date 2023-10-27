@@ -41,6 +41,7 @@ def inicializa():
 
 
 
+
     retangulos = {
     'retangulo': pygame.Rect((0, 312), (665, 29)),
     'retangulo1': pygame.Rect((52, 405), (665, 29)),
@@ -115,6 +116,9 @@ def desenha(window, assets, state, retangulos):
     pygame.draw.rect(window, 'blue', escada5)
     pygame.draw.rect(window, 'blue', escada6)
     pygame.draw.rect(window, 'blue', escada7)
+
+
+
 
 
 
