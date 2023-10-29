@@ -21,8 +21,19 @@ def inicializa():
     assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
     assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
 
+    mario = {
+        'climbing1': pygame.transform.scale(pygame.image.load('assets/images/mario/climbing1.png'),(60,60)),
+        'climbing2': pygame.transform.scale(pygame.image.load('assets/images/mario/climbing2.png'),(60,60)),
+        'hammer_jump': pygame.transform.scale(pygame.image.load('assets/images/mario/hammer_jump.png'),(60,60)),
+        'hammer_overhead': pygame.transform.scale(pygame.image.load('assets/images/mario/hammer_overhead.png'),(60,60)),
+        'hammer_stand': pygame.transform.scale(pygame.image.load('assets/images/mario/hammer_stand.png'),(60,60)),
+        'jumping': pygame.transform.scale(pygame.image.load('assets/images/mario/jumping.png'),(60,60)),
+        'running': pygame.transform.scale(pygame.image.load('assets/images/mario/running.png'),(60,60)),
+        'standing': pygame.transform.scale(pygame.image.load('assets/images/mario/standing.png'),(60,60))
+    }
+    # for player in mario:
+    #     state['rect_mario'] = player.get_rect()
     
-
     # # assets['new_back'].set_colorkey((255,27,84))
 
     # # Defina a cor da plataforma (R, G, B)
@@ -70,13 +81,19 @@ def inicializa():
     state = {
         't0': -1,   # Tempo inicial
     }
+    state['rect_mario'] = mario['standing'].get_rect()
+    state['pos_mario'] = [0, 840]
+    state['velocidade_mario'] = [0, 0]
 
 
 
-    return window, assets, state, retangulos, escadas
+    return window, assets, state, retangulos, escadas, mario
     
 # Recebe eventos do Pygame
-def recebe_eventos(state, window):
+def recebe_eventos(state, window, mario):
+
+    state['pos_mario'][0] += state['velocidade_mario'][0]
+    state['pos_mario'][1] += state['velocidade_mario'][1]
 
     # Calculo do fps
     t1 = pygame.time.get_ticks()
@@ -86,12 +103,43 @@ def recebe_eventos(state, window):
     state['t0'] = t1
     state['fps'] = fps
 
+    state['t2'] = 0
 
 
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # Se o evento QUIT foi acionado, retorna False
             return False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                state['velocidade_mario'][0] -= 2                    
+            elif event.key == pygame.K_RIGHT:
+                state['velocidade_mario'][0] += 2
+            elif event.key == pygame.K_UP:  
+                state['velocidade_mario'][1] -= 2  
+            elif event.key == pygame.K_DOWN:  
+                state['velocidade_mario'][1] += 2 
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                state['velocidade_mario'][0] += 2
+            elif event.key == pygame.K_RIGHT:
+                state['velocidade_mario'][0] -= 2
+            elif event.key == pygame.K_UP:  
+                state['velocidade_mario'][1] += 2  
+            elif event.key == pygame.K_DOWN:  
+                state['velocidade_mario'][1] -= 2 
+
+    if state['pos_mario'][0] < 0:
+        state['pos_mario'][0] = 0
+    elif state['pos_mario'][0] > 650:
+        state['pos_mario'][0] = 650
+
+    if state['pos_mario'][1] < 0:
+        state['pos_mario'][1] = 0
+    elif state['pos_mario'][1] > 880:
+        state['pos_mario'][1] = 880
+
+    state['rect_mario'].x,state['rect_mario'].y = state['pos_mario']
 
 
 
@@ -99,7 +147,7 @@ def recebe_eventos(state, window):
 
 
 
-def desenha(window, assets, state, retangulos, escadas):
+def desenha(window, assets, state, retangulos, escadas, mario):
     
 
     for retangulo in retangulos.values():
@@ -113,16 +161,17 @@ def desenha(window, assets, state, retangulos, escadas):
 
     window.blit(assets['background'], (0, 0))
     window.blit(assets['gorila'],(0,215))
+    window.blit(mario['standing'],state['pos_mario'])
 
     pygame.display.update()  # Atualiza a tela
 
 # Loop principal do jogo
-def game_loop(window, assets, state, retangulos, escadas):
+def game_loop(window, assets, state, retangulos, escadas, mario):
     
-    while recebe_eventos(state, window):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
-        desenha(window, assets, state, retangulos, escadas)
+    while recebe_eventos(state, window, mario):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
+        desenha(window, assets, state, retangulos, escadas, mario)
 
 if __name__ == '__main__':
     
-    w, assets, state, retangulos, escadas = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
-    game_loop(w, assets, state, retangulos, escadas)  # Inicia o loop principal do jogo
+    w, assets, state, retangulos, escadas, mario = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
+    game_loop(w, assets, state, retangulos, escadas, mario)  # Inicia o loop principal do jogo
