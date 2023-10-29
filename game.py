@@ -103,8 +103,7 @@ def recebe_eventos(state, window, mario):
     state['t0'] = t1
     state['fps'] = fps
 
-
-
+    state['t2'] = 0
 
 
 
