@@ -97,11 +97,12 @@ def inicializa():
 
 def colisao_plataforma(state, window, assets, mario, retangulos):
     for plataforma in retangulos.values():
-        col_plat = pygame.Rect.colliderect(state['rect_mario'], plataforma)
-        print(state['rect_mario'], plataforma)
-        if col_plat:
-            print('colisao')
-            return True
+        if (state['pos_mario'][1] < plataforma.y        ):
+            print('cond1')
+            if plataforma.y - 5 <= state['pos_mario'][1] + 60 <= plataforma.y + 10:
+                print('cond2')
+                print('colisao')
+                return True
     return False
     
 def colisao_escada(state, window, assets, mario, escadas):
@@ -147,6 +148,8 @@ def recebe_eventos(state, window, mario):
         
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
+         
+
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running_reverse']
                     state['vel_mario'][0] -= 145                    
@@ -157,6 +160,7 @@ def recebe_eventos(state, window, mario):
 
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
+          
                     state['mario'] = mario['climbing1']
                     state['vel_mario'][1] -= 145  
             if event.key == pygame.K_DOWN:  
@@ -176,10 +180,10 @@ def recebe_eventos(state, window, mario):
 
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
-                    state['vel_mario'][1] = 0  
+                    state['vel_mario'][1] += 145  
                 if colisao_escada(state, window, assets, mario, escadas):
                     if event.key == pygame.K_DOWN:  
-                        state['vel_mario'][1] = 0 
+                        state['vel_mario'][1] -= 145 
 
     if not colisao_escada(state, window, assets, mario, escadas):
         state['vel_mario'][1] = 0
@@ -203,6 +207,7 @@ def recebe_eventos(state, window, mario):
 
 
 def desenha(window, assets, state, retangulos, escadas, mario):
+    window.blit(assets['background'], (0, 0))
     
     # Desenha as plataformas
     for retangulo in retangulos.values():
@@ -213,7 +218,6 @@ def desenha(window, assets, state, retangulos, escadas, mario):
         pygame.draw.rect(window, 'blue', escada)
 
     # Desenha o background
-    window.blit(assets['background'], (0, 0))
 
     window.blit(assets['gorila'],(0,215))
     window.blit(state['mario'],state['pos_mario'])
