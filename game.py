@@ -2,7 +2,9 @@ import pygame
 from random import randint
 
 dimensoes = (720, 950)  # Define as dimensões da janela do jogo
-
+STILL = 0
+JUMPING = 1
+FALLING = 2
 # Inicializa o Pygame e carrega os recursos necessários
 def inicializa():
     pygame.init()  # Inicializa o Pygame
@@ -88,8 +90,10 @@ def inicializa():
     state['rect_mario'] = mario['standing'].get_rect()
     state['pos_mario'] = [0, 840]
     state['vel_mario'] = [0, 0]
-    state['g'] = 9.80665
+    state['g'] = 2
     state['mario'] = mario['standing']
+    state['estado'] = STILL
+    
 
 
 
@@ -132,14 +136,27 @@ def recebe_eventos(state, window, mario):
     # Atualiza a posição da jogador baseada na velocidade
     posicao_x = state['pos_mario'][0]
     posicao_y = state['pos_mario'][1]
+    state['vel_mario'][1] += state['g']
     v_x = state['vel_mario'][0]
     v_y = state['vel_mario'][1]
     g = state['g'] 
+    # prox_posicao_x = posicao_x + (v_x * dt)
+    # prox_posicao_y = posicao_y + (v_y * dt) + ((g / 2) * (dt ** 2))
     prox_posicao_x = posicao_x + (v_x * dt)
-    prox_posicao_y = posicao_y + (v_y * dt) + ((g / 2) * (dt ** 2))
+    prox_posicao_y = posicao_y + v_y
+    prox_posicao_y += 3
     state['pos_mario'][0] = prox_posicao_x
     state['pos_mario'][1] = prox_posicao_y
 
+    if state['vel_mario'][1] > 0:
+        state['estado'] = FALLING
+
+    if state['pos_mario'][1]+60 >= 895:
+        state['pos_mario'][1] = 895 - 60
+        state['vel_mario'][1] = 0
+        state['estado'] = STILL
+    if v_y != 2:
+        print(posicao_x,v_y)
 
 
     for event in pygame.event.get():
@@ -167,6 +184,11 @@ def recebe_eventos(state, window, mario):
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
                     state['vel_mario'][1] += 145 
+            if event.key == pygame.K_SPACE:
+                # if state['estado'] == STILL:
+                state['vel_mario'][1] -= 100
+                print('entra')
+                state['estado'] = JUMPING
                     
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -185,6 +207,7 @@ def recebe_eventos(state, window, mario):
                     if event.key == pygame.K_DOWN:  
                         state['vel_mario'][1] -= 145 
 
+        
     if not colisao_escada(state, window, assets, mario, escadas):
         state['vel_mario'][1] = 0
 
