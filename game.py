@@ -86,17 +86,28 @@ def inicializa():
     }
     state['rect_mario'] = mario['standing'].get_rect()
     state['pos_mario'] = [0, 840]
-    state['velocidade_mario'] = [0, 0]
+    state['vel_mario'] = [0, 0]
 
 
 
     return window, assets, state, retangulos, escadas, mario
+
+def colisao_plataforma(state, window, assets, mario, retangulos):
+    for plataforma in retangulos.values():
+        col_plat = pygame.Rect.colliderect(state['rect_mario'], plataforma)
+        print(plataforma)
+        print(state['rect_mario'])
+    if col_plat:
+        print('colisao')
+        return True
+    else:
+        return False
     
 # Recebe eventos do Pygame
 def recebe_eventos(state, window, mario):
 
-    state['pos_mario'][0] += state['velocidade_mario'][0]
-    state['pos_mario'][1] += state['velocidade_mario'][1]
+    # state['pos_mario'][0] += state['velocidade_mario'][0]
+    # state['pos_mario'][1] += state['velocidade_mario'][1]
 
     # Calculo do fps
     t1 = pygame.time.get_ticks()
@@ -105,8 +116,17 @@ def recebe_eventos(state, window, mario):
     fps = 1 / dt  # Calcula a taxa de quadros por segundo (FPS)
     state['t0'] = t1
     state['fps'] = fps
-
     state['t2'] = 0
+
+    # Atualiza a posição da bola baseada na velocidade
+    posicao_x = state['pos_mario'][0]
+    posicao_y = state['pos_mario'][1]
+    v_x = state['vel_mario'][0]
+    v_y = state['vel_mario'][1]
+    prox_posicao_x = posicao_x + (v_x * dt)
+    prox_posicao_y = posicao_y + (v_y * dt)
+    state['pos_mario'][0] = prox_posicao_x
+    state['pos_mario'][1] = prox_posicao_y
 
 
 
@@ -115,22 +135,24 @@ def recebe_eventos(state, window, mario):
             return False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                state['velocidade_mario'][0] -= 2                    
+                state['vel_mario'][0] -= 90                    
             elif event.key == pygame.K_RIGHT:
-                state['velocidade_mario'][0] += 2
-            elif event.key == pygame.K_UP:  
-                state['velocidade_mario'][1] -= 2  
-            elif event.key == pygame.K_DOWN:  
-                state['velocidade_mario'][1] += 2 
+                state['vel_mario'][0] += 90
+            if colisao_plataforma:
+                if event.key == pygame.K_UP:  
+                    state['vel_mario'][1] -= 90  
+                elif event.key == pygame.K_DOWN:  
+                    state['vel_mario'][1] += 90 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
-                state['velocidade_mario'][0] += 2
+                state['vel_mario'][0] += 90
             elif event.key == pygame.K_RIGHT:
-                state['velocidade_mario'][0] -= 2
-            elif event.key == pygame.K_UP:  
-                state['velocidade_mario'][1] += 2  
-            elif event.key == pygame.K_DOWN:  
-                state['velocidade_mario'][1] -= 2 
+                state['vel_mario'][0] -= 90
+            if colisao_plataforma:
+                if event.key == pygame.K_UP:  
+                    state['vel_mario'][1] += 90  
+                elif event.key == pygame.K_DOWN:  
+                    state['vel_mario'][1] -= 90 
 
     if state['pos_mario'][0] < 0:
         state['pos_mario'][0] = 0
