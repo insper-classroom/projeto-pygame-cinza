@@ -34,6 +34,7 @@ def inicializa():
         'running': pygame.transform.scale(pygame.image.load('assets/images/mario/running.png'),(60,60)),
         'standing': pygame.transform.scale(pygame.image.load('assets/images/mario/standing.png'),(60,60))
     }
+    
     # for player in mario:
     #     state['rect_mario'] = player.get_rect()
     
@@ -72,12 +73,12 @@ def inicializa():
     escadas = {
     'escada': pygame.Rect((203, 120), (28, 193)),
     'escada1': pygame.Rect((254, 120), (28, 193)),
-    'escada2': pygame.Rect((410, 237), (28, 75)),
-    'escada3': pygame.Rect((623, 341), (28, 65)),
-    'escada4': pygame.Rect((71, 435), (28, 95)),
-    'escada5': pygame.Rect((595, 555), (28, 95)),
-    'escada6': pygame.Rect((99, 678), (28, 95)),
-    'escada7': pygame.Rect((554, 802), (28, 95))
+    'escada2': pygame.Rect((410, 204), (28, 120)),
+    'escada3': pygame.Rect((623, 309), (28, 120)),
+    'escada4': pygame.Rect((71, 402), (28, 155)),
+    'escada5': pygame.Rect((595, 525), (28, 155)),
+    'escada6': pygame.Rect((99, 648), (28, 155)),
+    'escada7': pygame.Rect((554, 771), (28, 155))
     }
 
     # Inicializa o estado do jogo
@@ -87,6 +88,8 @@ def inicializa():
     state['rect_mario'] = mario['standing'].get_rect()
     state['pos_mario'] = [0, 840]
     state['vel_mario'] = [0, 0]
+    state['g'] = 9.80665
+    state['mario'] = mario['standing']
 
 
 
@@ -95,13 +98,20 @@ def inicializa():
 def colisao_plataforma(state, window, assets, mario, retangulos):
     for plataforma in retangulos.values():
         col_plat = pygame.Rect.colliderect(state['rect_mario'], plataforma)
-        print(plataforma)
-        print(state['rect_mario'])
-    if col_plat:
-        print('colisao')
-        return True
-    else:
-        return False
+        print(state['rect_mario'], plataforma)
+        if col_plat:
+            print('colisao')
+            return True
+    return False
+    
+def colisao_escada(state, window, assets, mario, escadas):
+    for escada in escadas.values():
+        col_esc = pygame.Rect.colliderect(state['rect_mario'], escada)
+        if col_esc:
+            print('colisao escada')
+            return True
+    return False
+        
     
 # Recebe eventos do Pygame
 def recebe_eventos(state, window, mario):
@@ -118,13 +128,14 @@ def recebe_eventos(state, window, mario):
     state['fps'] = fps
     state['t2'] = 0
 
-    # Atualiza a posição da bola baseada na velocidade
+    # Atualiza a posição da jogador baseada na velocidade
     posicao_x = state['pos_mario'][0]
     posicao_y = state['pos_mario'][1]
     v_x = state['vel_mario'][0]
     v_y = state['vel_mario'][1]
+    g = state['g'] 
     prox_posicao_x = posicao_x + (v_x * dt)
-    prox_posicao_y = posicao_y + (v_y * dt)
+    prox_posicao_y = posicao_y + (v_y * dt) + ((g / 2) * (dt ** 2))
     state['pos_mario'][0] = prox_posicao_x
     state['pos_mario'][1] = prox_posicao_y
 
@@ -133,26 +144,45 @@ def recebe_eventos(state, window, mario):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # Se o evento QUIT foi acionado, retorna False
             return False
+        
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                state['vel_mario'][0] -= 90                    
+                if colisao_plataforma(state, window, assets, mario, retangulos):
+                    state['mario'] = mario['running']
+                    state['vel_mario'][0] -= 90                    
             elif event.key == pygame.K_RIGHT:
-                state['vel_mario'][0] += 90
-            if colisao_plataforma:
-                if event.key == pygame.K_UP:  
+                if colisao_plataforma(state, window, assets, mario, retangulos):
+                    state['mario'] = mario['running']
+                    state['vel_mario'][0] += 90
+
+            if event.key == pygame.K_UP:  
+                if colisao_escada(state, window, assets, mario, escadas):
+                    state['mario'] = mario['climbing1']
                     state['vel_mario'][1] -= 90  
-                elif event.key == pygame.K_DOWN:  
+            if event.key == pygame.K_DOWN:  
+                if colisao_escada(state, window, assets, mario, escadas):
+                    state['mario'] = mario['climbing1']
                     state['vel_mario'][1] += 90 
+                    
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
-                state['vel_mario'][0] += 90
+                if colisao_plataforma(state, window, assets, mario, retangulos):
+                    state['mario'] = mario['standing']
+                    state['vel_mario'][0] += 90
             elif event.key == pygame.K_RIGHT:
-                state['vel_mario'][0] -= 90
-            if colisao_plataforma:
-                if event.key == pygame.K_UP:  
-                    state['vel_mario'][1] += 90  
-                elif event.key == pygame.K_DOWN:  
-                    state['vel_mario'][1] -= 90 
+                if colisao_plataforma(state, window, assets, mario, retangulos):
+                    state['mario'] = mario['standing']
+                    state['vel_mario'][0] -= 90
+
+            if event.key == pygame.K_UP:  
+                if colisao_escada(state, window, assets, mario, escadas):
+                    state['vel_mario'][1] = 0  
+                if colisao_escada(state, window, assets, mario, escadas):
+                    if event.key == pygame.K_DOWN:  
+                        state['vel_mario'][1] = 0 
+
+    if not colisao_escada(state, window, assets, mario, escadas):
+        state['vel_mario'][1] = 0
 
     if state['pos_mario'][0] < 0:
         state['pos_mario'][0] = 0
@@ -174,20 +204,19 @@ def recebe_eventos(state, window, mario):
 
 def desenha(window, assets, state, retangulos, escadas, mario):
     
-
+    # Desenha as plataformas
     for retangulo in retangulos.values():
         pygame.draw.rect(window, 'red', retangulo)
-    
-    # window.blit(assets['new_back'], (0, 0))
-    # # window.blit(assets['ponte'], (0, 0))
 
+    # Desenha as escadas
     for escada in escadas.values():
         pygame.draw.rect(window, 'blue', escada)
 
+    # Desenha o background
     window.blit(assets['background'], (0, 0))
 
     window.blit(assets['gorila'],(0,215))
-    window.blit(mario['standing'],state['pos_mario'])
+    window.blit(state['mario'],state['pos_mario'])
 
     pygame.display.update()  # Atualiza a tela
 
