@@ -90,6 +90,10 @@ def inicializa():
     state['vel_mario'] = [0, 0]
     state['g'] = 9.80665
     state['mario'] = mario['standing']
+    #estado = 0 -> parado
+    #estado = 1 -> pulando
+    #estado = 2 -> caindo
+    state['estado'] = 0
 
 
 
@@ -129,16 +133,22 @@ def recebe_eventos(state, window, mario):
     state['fps'] = fps
     state['t2'] = 0
 
+    # state['vel_mario'][1] += state['g']
+
+    # if state['vel_mario'][1] > 0:
+    #     state['estado'] = 2
+        
+
     # Atualiza a posição da jogador baseada na velocidade
-    posicao_x = state['pos_mario'][0]
-    posicao_y = state['pos_mario'][1]
-    v_x = state['vel_mario'][0]
-    v_y = state['vel_mario'][1]
-    g = state['g'] 
-    prox_posicao_x = posicao_x + (v_x * dt)
-    prox_posicao_y = posicao_y + (v_y * dt) + ((g / 2) * (dt ** 2))
-    state['pos_mario'][0] = prox_posicao_x
-    state['pos_mario'][1] = prox_posicao_y
+    # posicao_x = state['pos_mario'][0]
+    # posicao_y = state['pos_mario'][1]
+    # v_x = state['vel_mario'][0]
+    # v_y = state['vel_mario'][1]
+    # g = state['g'] 
+    # prox_posicao_x = posicao_x + (v_x * dt)
+    # prox_posicao_y = posicao_y + (v_y * dt) + ((g / 2) * (dt ** 2))
+    # state['pos_mario'][0] += state['vel_mario'][0]
+    # state['pos_mario'][1] += state['vel_mario'][1]
 
 
 
@@ -184,6 +194,12 @@ def recebe_eventos(state, window, mario):
                 if colisao_escada(state, window, assets, mario, escadas):
                     if event.key == pygame.K_DOWN:  
                         state['vel_mario'][1] -= 145 
+        elif event.type == pygame.K_SPACE:
+            if colisao_plataforma(state, window, assets, mario, retangulos):
+                if state['estado'] == 0:
+                    state['vel_mario'][1] -= 90
+                    state['estado'] = 1
+                    state['mario'] = mario['jumping']
 
     if not colisao_escada(state, window, assets, mario, escadas):
         state['vel_mario'][1] = 0
