@@ -87,11 +87,11 @@ def inicializa():
     state = {
         't0': -1,   # Tempo inicial
     }
-    state['rect_mario'] = mario['standing'].get_rect()
+    state['mario'] = mario['standing']
+    state['rect_mario'] = state['mario'].get_rect()
     state['pos_mario'] = [0, 840]
     state['vel_mario'] = [0, 0]
     state['g'] = 2
-    state['mario'] = mario['standing']
     state['estado'] = STILL
     
 
