@@ -78,8 +78,8 @@ def inicializa():
     'retangulo3': pygame.Rect((52, 650), (665, 29)),
     'retangulo4': pygame.Rect((0, 777), (665, 20)),
     'retangulo5': pygame.Rect((0, 895), (720, 29)),
-    'retangulo6': pygame.Rect((282, 211), (153, 28))
-
+    'retangulo6': pygame.Rect((282, 211), (153, 28)),
+    'teste': pygame.Rect((662, 405), (30, 30))
     }
 
     escadas = {
@@ -142,11 +142,23 @@ def colisao_escada(state, window, assets, mario, escadas):
     return False
 
 def mov_barril(window, assets, barril, retangulos):
-    
-    barril['vel_barril'][0] = 90
-    print(barril['vel_barril'][0])
+    if barril['pos_barril'][0] < 665:
+        print('rteste')
+        barril['vel_barril'][0] = 90
+    else:
+        barril['vel_barril'][0] = 0
+        if barril['pos_barril'][1] < 375:
+            print(barril['pos_barril'][1])
+            barril['vel_barril'][1] = 90
+        else:
+            barril['vel_barril'][1] = 0
+            barril['vel_barril'][0] = 0
+            barril['vel_barril'][0] = -90
+            print(barril['vel_barril'][0])
+
+        # print(barril['vel_barril'][0])
     return barril['vel_barril'][0]
-        
+
     
 # Recebe eventos do Pygame
 def recebe_eventos(state, window, mario, barril):
@@ -186,6 +198,7 @@ def recebe_eventos(state, window, mario, barril):
     barril['pos_barril'][1] = prox_pos_y_bar
 
 
+    mov_barril(window, assets, barril, retangulos)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # Se o evento QUIT foi acionado, retorna False
@@ -198,7 +211,7 @@ def recebe_eventos(state, window, mario, barril):
                     state['vel_mario'][0] -= 145                    
             elif event.key == pygame.K_RIGHT:
                 
-                mov_barril(window, assets, barril, retangulos)
+                print(barril['pos_barril'])
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running']
                     state['vel_mario'][0] += 145
@@ -275,6 +288,9 @@ def desenha(window, assets, state, retangulos, escadas, mario, barril):
 
     # Desenha o background
     window.blit(assets['background'], (0, 0))
+
+    
+    pygame.draw.rect(window, 'yellow', retangulos['teste'])
 
     # Desenha o barril
     # print(barril['pos_barril'])
