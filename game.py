@@ -39,9 +39,11 @@ def inicializa():
     }
     mario['running_reverse'] = pygame.transform.flip(mario['running'], True, False)
 
+    
     barril = {
-        'pos_barril' : [100,285],
-        'vel_barril': [0,0]
+        'pos_barril' : [100,295],
+        'vel_barril': [0,0],
+        'barril_rect': assets['barril1'].get_rect()
     }
 
     # for player in mario:
@@ -73,21 +75,23 @@ def inicializa():
     'retangulo1': pygame.Rect((52, 405), (665, 29)),
     'retangulo2': pygame.Rect((0, 528), (665, 29)),
     'retangulo3': pygame.Rect((52, 650), (665, 29)),
-    'retangulo4': pygame.Rect((0, 774), (665, 29)),
+    'retangulo4': pygame.Rect((0, 777), (665, 20)),
     'retangulo5': pygame.Rect((0, 895), (720, 29)),
-    'retangulo6': pygame.Rect((282, 210), (153, 28))
+    'retangulo6': pygame.Rect((282, 211), (153, 28))
 
     }
 
     escadas = {
-    'escada': pygame.Rect((203, 120), (28, 203)),
-    'escada1': pygame.Rect((254, 120), (28, 203)),
+    # 'escada': pygame.Rect((203, 120), (28, 203)),
+    # 'escada1': pygame.Rect((254, 120), (28, 203)),
     'escada2': pygame.Rect((410, 214), (28, 110)),
     'escada3': pygame.Rect((623, 319), (28, 100)),
-    'escada4': pygame.Rect((71, 412), (28, 125)),
-    'escada5': pygame.Rect((595, 535), (28, 125)),
-    'escada6': pygame.Rect((99, 658), (28, 125)),
-    'escada7': pygame.Rect((554, 781), (28, 125))
+    'escada4': pygame.Rect((71, 412), (28, 83)),
+    'escada5': pygame.Rect((595, 530), (28, 83)),
+    'escada6': pygame.Rect((99, 655), (28, 83)),
+    # 'escada7': pygame.Rect((554, 772), (28, 73))
+    'escada7': pygame.Rect((554, 775), (38, 80))
+
     }
 
     # Inicializa o estado do jogo
@@ -106,9 +110,12 @@ def inicializa():
 
 def colisao_plataforma(state, window, assets, mario, retangulos):
     for plataforma in retangulos.values():
-        if (state['pos_mario'][1] < plataforma.y        ):
+        if (state['pos_mario'][1] < plataforma.y):
             print('cond1')
-            if plataforma.y - 5 <= state['pos_mario'][1] + 60 <= plataforma.y + 10:
+            if (
+                (plataforma.y - 8 <= state['pos_mario'][1] + 60)  and 
+                (state['pos_mario'][1] + 60 <= plataforma.y + 8)
+            ):
                 print('cond2')
                 print('colisao')
                 return True
@@ -116,9 +123,29 @@ def colisao_plataforma(state, window, assets, mario, retangulos):
     
 def colisao_escada(state, window, assets, mario, escadas):
     for escada in escadas.values():
+    #    if (state['pos_mario'][0] >= escada.x and
+    #        state['pos_mario'][0] <= escada.x + escada.width
+    #        ):
+    #         print('cond1 escada')
+    #         if (
+    #             (state['pos_mario'][1] > escada.y and state['pos_mario'][1] - escada.y < 100) or 
+    #             (state['pos_mario'][1] > escada.y and state['pos_mario'][1] - escada.y < 100 and state['pos_mario'][1] + 60 == escada.y - escada.height) 
+    #         ):
+    #             print('cond2 escada')
+    #             return True
+
         col_esc = pygame.Rect.colliderect(state['rect_mario'], escada)
         if col_esc:
             print('colisao escada')
+            return True
+    return False
+
+def colisao_barril_plat(window, assets, barril, retangulos):
+    for plat in retangulos.values():
+        print(plat)
+        col = pygame.Rect.colliderect(barril['barril_rect'], plat)
+        if col:
+            print('BARRIL')
             return True
     return False
         
@@ -149,6 +176,16 @@ def recebe_eventos(state, window, mario, barril):
     state['pos_mario'][0] = prox_posicao_x
     state['pos_mario'][1] = prox_posicao_y
 
+    # Atualiza a posição do barril
+    pos_x_barril = barril['pos_barril'][0]
+    pos_y_barril = barril['pos_barril'][1]
+    v_x_barril = barril['vel_barril'][0]
+    v_y_barril = barril['vel_barril'][1]
+    prox_pos_x_bar = pos_x_barril + (v_x_barril * dt)
+    prox_pos_y_bar = pos_y_barril + (v_y_barril * dt)
+    barril['pos_barril'][0] = prox_pos_x_bar
+    barril['pos_barril'][1] = prox_pos_y_bar
+
 
 
     for event in pygame.event.get():
@@ -157,25 +194,39 @@ def recebe_eventos(state, window, mario, barril):
         
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-         
-
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running_reverse']
                     state['vel_mario'][0] -= 145                    
             elif event.key == pygame.K_RIGHT:
+                # if colisao_barril_plat(window, assets, barril, retangulos):
+                barril['vel_barril'][0] += 80
+                if not colisao_barril_plat(window, assets, barril, retangulos):
+                    barril['vel_barril'][1] += 80
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running']
                     state['vel_mario'][0] += 145
 
+        
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
-          
                     state['mario'] = mario['climbing1']
                     state['vel_mario'][1] -= 145  
             if event.key == pygame.K_DOWN:  
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
-                    state['vel_mario'][1] += 145 
+                    state['vel_mario'][1] += 90 
+
+            if event.key == pygame.K_SPACE:
+                state['vel_mario'][1] += 90
+                    # if retangulos['retangulo5'].y > escadas['escada7'].y + escadas['escada7'].height:
+                    #     state['vel_mario'][1] = 0
+                    # for plataforma in retangulos.values():
+                    #     for escada in escadas.values():
+                    #         if colisao_plataforma(state, window, assets, mario, retangulos):
+                    #             if plataforma.y > escada.y + escada.height:
+                    #     # for plataforma in retangulos:
+                    #     #     if 
+                    #                 state['vel_mario'][1] = 0
                     
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -190,9 +241,9 @@ def recebe_eventos(state, window, mario, barril):
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['vel_mario'][1] += 145  
+            if event.key == pygame.K_DOWN:  
                 if colisao_escada(state, window, assets, mario, escadas):
-                    if event.key == pygame.K_DOWN:  
-                        state['vel_mario'][1] -= 145 
+                    state['vel_mario'][1] -= 90 
 
     if not colisao_escada(state, window, assets, mario, escadas):
         state['vel_mario'][1] = 0
@@ -216,7 +267,6 @@ def recebe_eventos(state, window, mario, barril):
 
 
 def desenha(window, assets, state, retangulos, escadas, mario, barril):
-    window.blit(assets['background'], (0, 0))
     
     # Desenha as plataformas
     for retangulo in retangulos.values():
@@ -227,10 +277,13 @@ def desenha(window, assets, state, retangulos, escadas, mario, barril):
         pygame.draw.rect(window, 'blue', escada)
 
     # Desenha o background
+    window.blit(assets['background'], (0, 0))
 
-    window.blit(assets['gorila'],(0,215))
-    window.blit(state['mario'],state['pos_mario'])
+    # Desenha o barril
     window.blit(assets['barril1'], (barril['pos_barril'][0], barril['pos_barril'][1]))
+
+    window.blit(assets['gorila'],(0,215))   # Desenha o gorila
+    window.blit(state['mario'],state['pos_mario'])  # Desenha o jogador
 
     pygame.display.update()  # Atualiza a tela
 
@@ -239,7 +292,6 @@ def game_loop(window, assets, state, retangulos, escadas, mario, barril):
     
     while recebe_eventos(state, window, mario, barril):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
         desenha(window, assets, state, retangulos, escadas, mario, barril)
-        
 
 if __name__ == '__main__':
     
