@@ -2,6 +2,7 @@ import pygame
 from random import randint
 
 dimensoes = (720, 950)  # Define as dimensões da janela do jogo
+RUN = False
 
 # Inicializa o Pygame e carrega os recursos necessários
 def inicializa():
@@ -140,14 +141,11 @@ def colisao_escada(state, window, assets, mario, escadas):
             return True
     return False
 
-def colisao_barril_plat(window, assets, barril, retangulos):
-    for plat in retangulos.values():
-        print(plat)
-        col = pygame.Rect.colliderect(barril['barril_rect'], plat)
-        if col:
-            print('BARRIL')
-            return True
-    return False
+def mov_barril(window, assets, barril, retangulos):
+    
+    barril['vel_barril'][0] = 90
+    print(barril['vel_barril'][0])
+    return barril['vel_barril'][0]
         
     
 # Recebe eventos do Pygame
@@ -180,6 +178,7 @@ def recebe_eventos(state, window, mario, barril):
     pos_x_barril = barril['pos_barril'][0]
     pos_y_barril = barril['pos_barril'][1]
     v_x_barril = barril['vel_barril'][0]
+    # print(v_x_barril)
     v_y_barril = barril['vel_barril'][1]
     prox_pos_x_bar = pos_x_barril + (v_x_barril * dt)
     prox_pos_y_bar = pos_y_barril + (v_y_barril * dt)
@@ -198,10 +197,8 @@ def recebe_eventos(state, window, mario, barril):
                     state['mario'] = mario['running_reverse']
                     state['vel_mario'][0] -= 145                    
             elif event.key == pygame.K_RIGHT:
-                # if colisao_barril_plat(window, assets, barril, retangulos):
-                barril['vel_barril'][0] += 80
-                if not colisao_barril_plat(window, assets, barril, retangulos):
-                    barril['vel_barril'][1] += 80
+                
+                mov_barril(window, assets, barril, retangulos)
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running']
                     state['vel_mario'][0] += 145
@@ -280,7 +277,8 @@ def desenha(window, assets, state, retangulos, escadas, mario, barril):
     window.blit(assets['background'], (0, 0))
 
     # Desenha o barril
-    window.blit(assets['barril1'], (barril['pos_barril'][0], barril['pos_barril'][1]))
+    # print(barril['pos_barril'])
+    window.blit(assets['barril1'], barril['pos_barril'])
 
     window.blit(assets['gorila'],(0,215))   # Desenha o gorila
     window.blit(state['mario'],state['pos_mario'])  # Desenha o jogador
