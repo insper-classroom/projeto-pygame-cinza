@@ -152,9 +152,9 @@ def mov_barril(window, assets, barril, retangulos):
             barril['vel_barril'][1] = 90
         else:
             barril['vel_barril'][1] = 0
-            barril['vel_barril'][0] = 0
-            barril['vel_barril'][0] = -90
-            print(barril['vel_barril'][0])
+    if barril['pos_barril'][0] > 10 and barril['pos_barril'][1] > 375:
+        barril['vel_barril'][0] = -90
+        print(barril['vel_barril'][0])
 
         # print(barril['vel_barril'][0])
     return barril['vel_barril'][0]
