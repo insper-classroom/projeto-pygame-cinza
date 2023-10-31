@@ -157,7 +157,11 @@ def recebe_eventos(state, window, mario):
         state['estado'] = STILL
     if v_y != 2:
         print(posicao_x,v_y)
-
+    # if state['estado'] == JUMPING:
+    #     state['vel_mario'][1] += state['g']  # Aplicar a aceleração devido à gravidade
+    #     if state['pos_mario'][1] >= 840:  # Ajuste a altura do chão conforme necessário
+    #         state['pos_mario'][1] = 840
+    #         state['estado'] = STILL 
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # Se o evento QUIT foi acionado, retorna False
@@ -185,10 +189,12 @@ def recebe_eventos(state, window, mario):
                     state['mario'] = mario['climbing1']
                     state['vel_mario'][1] += 145 
             if event.key == pygame.K_SPACE:
-                # if state['estado'] == STILL:
-                state['vel_mario'][1] -= 100
-                print('entra')
-                state['estado'] = JUMPING
+                if state['estado'] == STILL:
+                    if not colisao_escada(state, window, assets, mario, escadas):
+                        state['pos_mario'][1] -= 45
+                        print('entra')
+                        state['estado'] = JUMPING
+                
                     
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
