@@ -2,7 +2,8 @@ import pygame
 from random import randint
 
 dimensoes = (720, 950)  # Define as dimensões da janela do jogo
-
+barril_x = 100
+barril_y = 285
 # Inicializa o Pygame e carrega os recursos necessários
 def inicializa():
     pygame.init()  # Inicializa o Pygame
@@ -23,6 +24,9 @@ def inicializa():
 
     assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
     assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
+
+    assets['barril1'] = pygame.image.load('assets/images/barrels/barrel.png')
+    assets['barril1'] = pygame.transform.scale(assets['barril1'],(30,30))
 
     mario = {
         'climbing1': pygame.transform.scale(pygame.image.load('assets/images/mario/climbing1.png'),(60,60)),
@@ -221,6 +225,7 @@ def desenha(window, assets, state, retangulos, escadas, mario):
 
     window.blit(assets['gorila'],(0,215))
     window.blit(state['mario'],state['pos_mario'])
+    window.blit(assets['barril1'], (barril_x, barril_y))
 
     pygame.display.update()  # Atualiza a tela
 
@@ -229,6 +234,7 @@ def game_loop(window, assets, state, retangulos, escadas, mario):
     
     while recebe_eventos(state, window, mario):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
         desenha(window, assets, state, retangulos, escadas, mario)
+        
 
 if __name__ == '__main__':
     
