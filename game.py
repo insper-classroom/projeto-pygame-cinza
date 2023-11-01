@@ -79,7 +79,7 @@ def inicializa():
     'retangulo4': pygame.Rect((0, 777), (665, 20)),
     'retangulo5': pygame.Rect((0, 895), (720, 29)),
     'retangulo6': pygame.Rect((282, 211), (153, 28)),
-    'teste': pygame.Rect((662, 405), (30, 30))
+    'teste': pygame.Rect((662, 527), (30, 30))
     }
 
     escadas = {
@@ -142,19 +142,33 @@ def colisao_escada(state, window, assets, mario, escadas):
     return False
 
 def mov_barril(window, assets, barril, retangulos):
+    # Primeira plataforma superior
     if barril['pos_barril'][0] < 665:
-        print('rteste')
-        barril['vel_barril'][0] = 90
+        barril['vel_barril'][0] = 180
     else:
         barril['vel_barril'][0] = 0
+        # Primeira queda
         if barril['pos_barril'][1] < 375:
-            print(barril['pos_barril'][1])
-            barril['vel_barril'][1] = 90
+            # print(barril['pos_barril'][1])
+            barril['vel_barril'][1] = 180
         else:
             barril['vel_barril'][1] = 0
+    # Segunda plataforma
     if barril['pos_barril'][0] > 10 and barril['pos_barril'][1] > 375:
-        barril['vel_barril'][0] = -90
-        print(barril['vel_barril'][0])
+        barril['vel_barril'][0] = -180
+        # print(barril['vel_barril'][0])
+        # print(barril['pos_barril'][0])
+        if barril['pos_barril'][0] < 10.5 and barril['pos_barril'][0] > 10:
+            if barril['pos_barril'][1] < 493:
+                barril['vel_barril'][1] = 180
+                print(barril['pos_barril'][1])
+            # if barril['pos_barril'][1] > 525 and barril['pos_barril'][1] < 530:
+            else:
+                barril['vel_barril'][1] = 0
+                print(barril['pos_barril'])
+    if barril['pos_barril'][1] > 490 and barril['pos_barril'][1] < 505:
+        if barril['pos_barril'][0] < 10.5 and barril['pos_barril'][0] > 10:
+            barril['vel_barril'][0] = 180
 
         # print(barril['vel_barril'][0])
     return barril['vel_barril'][0]
