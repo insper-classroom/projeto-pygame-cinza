@@ -1,9 +1,13 @@
 import pygame
 from random import randint
+from time import sleep
 
 dimensoes = (720, 950)  # Define as dimensões da janela do jogo
+STILL = 0
+JUMPING = 1
+FALLING = 2
+CLIMBING = 3
 RUN = False
-
 # Inicializa o Pygame e carrega os recursos necessários
 def inicializa():
     pygame.init()  # Inicializa o Pygame
@@ -107,7 +111,8 @@ def inicializa():
     state['rect_mario'] = state['mario'].get_rect()
     state['pos_mario'] = [0, 840]
     state['vel_mario'] = [0, 0]
-    state['g'] = 9.80665
+    state['g'] = 2
+    state['estado'] = STILL
     state['barris'] = barris
 
 
@@ -129,20 +134,9 @@ def colisao_plataforma(state, window, assets, mario, retangulos):
     
 def colisao_escada(state, window, assets, mario, escadas):
     for escada in escadas.values():
-    #    if (state['pos_mario'][0] >= escada.x and
-    #        state['pos_mario'][0] <= escada.x + escada.width
-    #        ):
-    #         print('cond1 escada')
-    #         if (
-    #             (state['pos_mario'][1] > escada.y and state['pos_mario'][1] - escada.y < 100) or 
-    #             (state['pos_mario'][1] > escada.y and state['pos_mario'][1] - escada.y < 100 and state['pos_mario'][1] + 60 == escada.y - escada.height) 
-    #         ):
-    #             print('cond2 escada')
-    #             return True
-
-        col_esc = pygame.Rect.colliderect(state['rect_mario'], escada)
+        retangulo = pygame.Rect((state['pos_mario'][0],state['pos_mario'][1]),(60,60))
+        col_esc = pygame.Rect.colliderect(retangulo, escada)
         if col_esc:
-            print('colisao escada')
             return True
     return False
 
@@ -203,9 +197,11 @@ def recebe_eventos(state, window, mario ):
             return False
         
         elif event.type == pygame.KEYDOWN:
+            print("TECLA")
             if event.key == pygame.K_LEFT:
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running_reverse']
+                    state['estado'] = 'RUNNING'
                     state['vel_mario'][0] -= 145                    
             elif event.key == pygame.K_RIGHT:
                 
@@ -217,23 +213,25 @@ def recebe_eventos(state, window, mario ):
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
-                    state['vel_mario'][1] -= 145  
+                    state['estado'] = CLIMBING
+                    state['vel_mario'][1] -= 80
+                    state['vel_mario'][0] = 0
             if event.key == pygame.K_DOWN:  
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
-                    state['vel_mario'][1] += 90 
-
+                    state['estado'] = CLIMBING
+                    state['vel_mario'][1] += 80
+                    state['vel_mario'][0] = 0
             if event.key == pygame.K_SPACE:
-                state['vel_mario'][1] += 90
-                    # if retangulos['retangulo5'].y > escadas['escada7'].y + escadas['escada7'].height:
-                    #     state['vel_mario'][1] = 0
-                    # for plataforma in retangulos.values():
-                    #     for escada in escadas.values():
-                    #         if colisao_plataforma(state, window, assets, mario, retangulos):
-                    #             if plataforma.y > escada.y + escada.height:
-                    #     # for plataforma in retangulos:
-                    #     #     if 
-                    #                 state['vel_mario'][1] = 0
+                if state['estado'] == STILL:
+                    if not colisao_escada(state, window, assets, mario, escadas):
+                        # state['pos_mario'][1] -= 45
+                        # print('entra')
+                        state['estado'] = JUMPING
+                        state['vel_mario'][1] -= 80
+                        # sleep(1)
+                        # state['vel_mario'][1] += 50
+                        # state['mario'] = mario['standing']
                     
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -247,13 +245,53 @@ def recebe_eventos(state, window, mario ):
 
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
-                    state['vel_mario'][1] += 145  
+                    state['vel_mario'][1] += 80 
             if event.key == pygame.K_DOWN:  
                 if colisao_escada(state, window, assets, mario, escadas):
-                    state['vel_mario'][1] -= 90 
+                    state['vel_mario'][1] -= 80
 
+     # Atualiza a posição da jogador baseada na velocidade
+    posicao_x = state['pos_mario'][0]
+    posicao_y = state['pos_mario'][1]
+    
     if not colisao_escada(state, window, assets, mario, escadas):
+        state['vel_mario'][1] += state['g']
+
+    if state['vel_mario'][1] > 0:
+        state['estado'] = FALLING
+
+    if colisao_plataforma(state, window, assets, mario, retangulos) and state['estado'] == FALLING and not colisao_escada(state, window, assets, mario, escadas):
         state['vel_mario'][1] = 0
+        state['estado'] = STILL
+    
+    v_x = state['vel_mario'][0]
+    v_y = state['vel_mario'][1]
+    # g = state['g'] 
+    # prox_posicao_x = posicao_x + (v_x * dt)
+    # prox_posicao_y = posicao_y + (v_y * dt) + ((g / 2) * (dt ** 2))
+    prox_posicao_x = posicao_x + (v_x * dt)
+    prox_posicao_y = posicao_y + (v_y*dt)
+    
+    state['pos_mario'][0] = prox_posicao_x
+    state['pos_mario'][1] = prox_posicao_y
+
+    # if state['vel_mario'][1] > 0:
+    #     state['estado'] = FALLING
+
+    # if state['pos_mario'][1]+60 >= 895:
+    #     state['pos_mario'][1] = 895 - 60
+    #     state['vel_mario'][1] = 0
+    #     state['estado'] = STILL
+    # if v_y != 2:
+    #     print(posicao_x,v_y)
+    # if state['estado'] == JUMPING:
+    #     state['vel_mario'][1] += state['g']  # Aplicar a aceleração devido à gravidade
+    #     if state['pos_mario'][1] >= 840:  # Ajuste a altura do chão conforme necessário
+    #         state['pos_mario'][1] = 840
+    #         state['estado'] = STILL 
+
+    # if not colisao_escada(state, window, assets, mario, escadas):
+    #     state['vel_mario'][1] = m pro
 
     if state['pos_mario'][0] < 0:
         state['pos_mario'][0] = 0
@@ -265,7 +303,7 @@ def recebe_eventos(state, window, mario ):
     elif state['pos_mario'][1] > 880:
         state['pos_mario'][1] = 880
 
-    state['rect_mario'].x,state['rect_mario'].y = state['pos_mario']
+    # state['rect_mario'].x,state['rect_mario'].y = state['pos_mario']
 
 
 
