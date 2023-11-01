@@ -89,6 +89,12 @@ section{
   box-shadow: 0px 10px 7px -9px rgba(0,0,0,0.75);
   transition: all .3s ease-out; 
 }
+.image
+ #featured .image{
+    flex: 1 0 12em;
+    order: 2;
+   
+  }
 
 header{
   display: flex;
@@ -112,7 +118,7 @@ header:before{
 .nav-brand img{
   width: auto;
   padding-top: 1em;
-  height: 7.5em;
+  height: 17.5em;
 }
 .toggle-menu{
   display: block;
@@ -193,7 +199,7 @@ a.nav-link:focus{
 	display: flex;
 	height: 100vh;
 	align-items: center;
-	background: #1a114bc5 url("https://i.postimg.cc/Nff8pQkJ/Bege-Flor-Superminimalismo-Texto-Curvado-Logotipo-6.png") no-repeat right bottom;
+	background: #1a114bc5 ;
 }
 
 .hero-text{
@@ -208,7 +214,7 @@ a.nav-link:focus{
 }
 
 
-#featured .image img{
+#featured  img{
   width: 100%;
   
   height: auto;
@@ -430,10 +436,7 @@ input{
     flex: 1;
     order: 1;
   }
-  #featured .image{
-    flex: 1 0 12em;
-    order: 2;
-  }
+ 
   
   #collections .wrapper{
     margin: 0 4em;
@@ -520,9 +523,7 @@ input{
   }
  
   
-  #featured .image{
-    margin-top: -2em;
-  }
+  
   #about .wrapper{
     display: flex;
   }
@@ -551,9 +552,7 @@ input{
   
 
   
-  #featured .image{
-    margin-top: -4em;
-  }
+
   
   #about .text{
     padding-right: 3em;
