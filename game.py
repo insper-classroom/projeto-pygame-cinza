@@ -21,10 +21,12 @@ def inicializa():
     assets = {}
     assets['background'] = pygame.image.load('assets/img/background.png').convert_alpha()
     assets['background'] = pygame.transform.scale(assets['background'], dimensoes)
+
     assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
     assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
-    
 
+    assets['coracao'] = pygame.image.load('assets/images/heart_5.png')
+    assets['coracao'] = pygame.transform.scale(assets['coracao'], (20, 20))
 
     assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
     assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
@@ -114,7 +116,7 @@ def inicializa():
     state['g'] = 2
     state['estado'] = STILL
     state['barris'] = barris
-
+    state['vidas'] = 90
 
 
     return window, assets, state, retangulos, escadas, mario
@@ -122,13 +124,13 @@ def inicializa():
 def colisao_plataforma(state, window, assets, mario, retangulos):
     for plataforma in retangulos.values():
         if (state['pos_mario'][1] < plataforma.y):
-            print('cond1')
+            # print('cond1')
             if (
                 (plataforma.y - 8 <= state['pos_mario'][1] + 60)  and 
                 (state['pos_mario'][1] + 60 <= plataforma.y + 8)
             ):
-                print('cond2')
-                print('colisao')
+                # print('cond2')
+                # print('colisao')
                 return True
     return False
     
@@ -147,6 +149,12 @@ def mov_barril(window, assets, barril, retangulos):
     elif barril['cont'] == 0:
         barril['cont'] += 1
         barril['vel_barril'][0] *= -1
+
+def coli_jog_fog(window, assets, barril):
+    col = pygame.Rect.colliderect(state['rect_mario'], barril['barril_rect'])
+    if col:
+        print('bateu')
+        state['vidas'] -= 30
     
 # Recebe eventos do Pygame
 def recebe_eventos(state, window, mario ):
@@ -197,7 +205,7 @@ def recebe_eventos(state, window, mario ):
             return False
         
         elif event.type == pygame.KEYDOWN:
-            print("TECLA")
+            # print("TECLA")
             if event.key == pygame.K_LEFT:
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running_reverse']
@@ -324,11 +332,13 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
     # Desenha o background
     window.blit(assets['background'], (0, 0))
 
-    
-    pygame.draw.rect(window, 'yellow', retangulos['teste'])
+    # Desenha as vidas
+    vidas = state['vidas']
+    print(vidas)
+    for i in range(0, vidas, 30):
+        window.blit(assets['coracao'], (i + 25, 35))
 
     # Desenha o barril
-    # print(barril['pos_barril'])
     for barril in state['barris']:
         window.blit(assets['barril1'], barril['pos_barril'])
 
