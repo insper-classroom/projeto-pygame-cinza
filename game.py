@@ -332,7 +332,7 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
     for barril in state['barris']:
         window.blit(assets['barril1'], barril['pos_barril'])
 
-    window.blit(assets['gorila'],(0,215))   # Desenha o gorila
+    # window.blit(assets['gorila'],(0,215))   # Desenha o gorila
     window.blit(state['mario'],state['pos_mario'])  # Desenha o jogador
 
     pygame.display.update()  # Atualiza a tela
