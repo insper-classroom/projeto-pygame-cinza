@@ -31,18 +31,15 @@ def inicializa():
     assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
     assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
 
-    assets['barril1'] = pygame.image.load('assets/images/Fire-Ball.gif')
-    assets['barril1'] = pygame.transform.scale(assets['barril1'],(30,30))
+    assets['fire_ball'] = pygame.image.load('assets/images/Fire-Ball.gif')
+    assets['fire_ball'] = pygame.transform.scale(assets['fire_ball'],(30,30))
 
     mario = {
         'climbing1': pygame.transform.scale(pygame.image.load('assets/images/mario/climbing1.png'),(60,60)),
         'climbing2': pygame.transform.scale(pygame.image.load('assets/images/mario/climbing2.png'),(60,60)),
-        'hammer_jump': pygame.transform.scale(pygame.image.load('assets/images/mario/hammer_jump.png'),(60,60)),
-        'hammer_overhead': pygame.transform.scale(pygame.image.load('assets/images/mario/hammer_overhead.png'),(60,60)),
-        'hammer_stand': pygame.transform.scale(pygame.image.load('assets/images/mario/hammer_stand.png'),(60,60)),
         'jumping': pygame.transform.scale(pygame.image.load('assets/images/mario/jumping.png'),(60,60)),
         'running': pygame.transform.scale(pygame.image.load('assets/images/mario/running.png'),(60,60)),
-        'standing': pygame.transform.scale(pygame.image.load('assets/images/mario/standing.png'),(60,60))
+        'standing': pygame.transform.scale(pygame.image.load('assets/images/mario/standing.png'),(60,60)),
     }
     mario['running_reverse'] = pygame.transform.flip(mario['running'], True, False)
 
@@ -54,43 +51,16 @@ def inicializa():
     'retangulo4': pygame.Rect((0, 777), (665, 20)),
     'retangulo5': pygame.Rect((0, 895), (720, 29)),
     'retangulo6': pygame.Rect((282, 211), (153, 28)),
-    'teste': pygame.Rect((662, 527), (30, 30))
     }
 
-    barris = []
+    fire_ball = []
     for i in range(6):
-        barris.append({
-        'pos_barril': [list(retangulos.values())[i].x, list(retangulos.values())[i].y - list(retangulos.values())[i].height],
-        'vel_barril': [180 if i % 2 == 0 else -180,0],
-        'barril_rect': assets['barril1'].get_rect(),
+        fire_ball.append({
+        'pos_fire_ball': [list(retangulos.values())[i].x, list(retangulos.values())[i].y - list(retangulos.values())[i].height],
+        'vel_fire_ball': [180 if i % 2 == 0 else -180,0],
+        'fire_ball_rect': assets['fire_ball'].get_rect(),
         'cont': 0
         })
-   
-
-    # for player in mario:
-    #     state['rect_mario'] = player.get_rect()
-    
-    # # assets['new_back'].set_colorkey((255,27,84))
-
-    # # Defina a cor da plataforma (R, G, B)
-    # platform_color = (255,27,84)  # Azul, por exemplo
-
-    # # Crie uma máscara vazia do mesmo tamanho que a imagem
-    # assets['mask'] = pygame.mask.Mask((assets['background'].get_width(), assets['background'].get_height()))
-
-    # # Percorra cada pixel na imagem
-    # for x in range(assets['background'].get_width()):
-    #     for y in range(assets['background'].get_height()):
-    #         # Verifique se a cor do pixel corresponde à cor da plataforma
-    #         if assets['background'].get_at((x, y))[:3] == platform_color:
-    #             # Se corresponder, adicione este pixel à máscara
-    #             assets['mask'].set_at((x, y), 1)
-
-    # assets['new_back'] = assets['mask'].to_surface()
-
-
-
-
 
     escadas = {
     # 'escada': pygame.Rect((203, 120), (28, 203)),
@@ -115,7 +85,7 @@ def inicializa():
     state['vel_mario'] = [0, 0]
     state['g'] = 2
     state['estado'] = STILL
-    state['barris'] = barris
+    state['fire_ball'] = fire_ball
     state['vidas'] = 90
 
 
@@ -142,25 +112,31 @@ def colisao_escada(state, window, assets, mario, escadas):
             return True
     return False
 
-def mov_barril(window, assets, barril, retangulos):
-    col = barril['barril_rect'].collidelist(list(retangulos.values()))
+def mov_fire_ball(window, assets, fire_ball, retangulos):
+    col = fire_ball['fire_ball_rect'].collidelist(list(retangulos.values()))
     if col != -1:
-        barril['cont'] = 0
-    elif barril['cont'] == 0:
-        barril['cont'] += 1
-        barril['vel_barril'][0] *= -1
+        fire_ball['cont'] = 0
+    elif fire_ball['cont'] == 0:
+        fire_ball['cont'] += 1
+        fire_ball['vel_fire_ball'][0] *= -1
 
-def coli_jog_fog(window, assets, barril):
-    col = pygame.Rect.colliderect(state['rect_mario'], barril['barril_rect'])
+def coli_jog_fog(window, assets, fire_ball):
+    col = pygame.Rect.colliderect(state['rect_mario'], fire_ball['fire_ball_rect'])
     if col:
         print('bateu')
         state['vidas'] -= 30
-    
+
+# def pulo(window, assets, retangulos, escadas):
+#     col_plat = colisao_plataforma(state, window, assets, mario, retangulos)
+#     col_esc = colisao_escada(state, window, assets, mario, escadas)
+#     if col_plat:
+#         if not col_esc:
+#             state['vel_']
 # Recebe eventos do Pygame
 def recebe_eventos(state, window, mario ):
 
-    for barril in state['barris']:
-        barril['barril_rect'].x, barril['barril_rect'].y = barril['pos_barril']
+    for fire_ball in state['fire_ball']:
+        fire_ball['fire_ball_rect'].x, fire_ball['fire_ball_rect'].y = fire_ball['pos_fire_ball']
 
     # state['pos_mario'][0] += state['velocidade_mario'][0]
     # state['pos_mario'][1] += state['velocidade_mario'][1]
@@ -185,27 +161,26 @@ def recebe_eventos(state, window, mario ):
     state['pos_mario'][0] = prox_posicao_x
     state['pos_mario'][1] = prox_posicao_y
 
-    for barril in state['barris']:
-        # Atualiza a posição do barril
-        pos_x_barril = barril['pos_barril'][0]
-        pos_y_barril = barril['pos_barril'][1]
-        v_x_barril = barril['vel_barril'][0]
-        # print(v_x_barril)
-        v_y_barril = barril['vel_barril'][1]
-        prox_pos_x_bar = pos_x_barril + (v_x_barril * dt)
-        prox_pos_y_bar = pos_y_barril + (v_y_barril * dt)
-        barril['pos_barril'][0] = prox_pos_x_bar
-        barril['pos_barril'][1] = prox_pos_y_bar
+    for fire_ball in state['fire_ball']:
+        # Atualiza a posição do fire_ball
+        pos_x_fire_ball = fire_ball['pos_fire_ball'][0]
+        pos_y_fire_ball = fire_ball['pos_fire_ball'][1]
+        v_x_fire_ball = fire_ball['vel_fire_ball'][0]
+        # print(v_x_fire_ball)
+        v_y_fire_ball = fire_ball['vel_fire_ball'][1]
+        prox_pos_x_fire_ball = pos_x_fire_ball + (v_x_fire_ball * dt)
+        prox_pos_y_fire_ball = pos_y_fire_ball + (v_y_fire_ball * dt)
+        fire_ball['pos_fire_ball'][0] = prox_pos_x_fire_ball
+        fire_ball['pos_fire_ball'][1] = prox_pos_y_fire_ball
 
 
-        mov_barril(window, assets, barril, retangulos)
+        mov_fire_ball(window, assets, fire_ball, retangulos)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # Se o evento QUIT foi acionado, retorna False
             return False
         
         elif event.type == pygame.KEYDOWN:
-            # print("TECLA")
             if event.key == pygame.K_LEFT:
                 if colisao_plataforma(state, window, assets, mario, retangulos):
                     state['mario'] = mario['running_reverse']
@@ -237,6 +212,8 @@ def recebe_eventos(state, window, mario ):
                         # print('entra')
                         state['estado'] = JUMPING
                         state['vel_mario'][1] -= 80
+                        if state['estado'] == JUMPING:
+                            state['vel_mario'][1] += 80
                         # sleep(1)
                         # state['vel_mario'][1] += 50
                         # state['mario'] = mario['standing']
@@ -338,9 +315,9 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
     for i in range(0, vidas, 30):
         window.blit(assets['coracao'], (i + 25, 35))
 
-    # Desenha o barril
-    for barril in state['barris']:
-        window.blit(assets['barril1'], barril['pos_barril'])
+    # Desenha o fire_ball
+    for fire_ball in state['fire_ball']:
+        window.blit(assets['fire_ball'], fire_ball['pos_fire_ball'])
 
     # window.blit(assets['gorila'],(0,215))   # Desenha o gorila
     window.blit(state['mario'],state['pos_mario'])  # Desenha o jogador
