@@ -13,7 +13,6 @@ class Jogador(pygame.sprite.Sprite):
         self.vel_x = 0
         self.vel_y = 0
         self.state = STILL
-        self.highest_y = self.rect.bottom
         self.grupos['all_sprites'].add(self)
 
     def update(self):
@@ -23,9 +22,6 @@ class Jogador(pygame.sprite.Sprite):
             self.state = FALLING
 
         self.rect.y += self.vel_y
-
-        if self.state != FALLING:
-            self.highest_y = self.rect.bottom
 
         colisoes = pygame.sprite.spritecollide(self, self.grupos['plataformas'], False)
 
@@ -44,6 +40,8 @@ class Jogador(pygame.sprite.Sprite):
 
     def jump(self):
         # Só pode pular se ainda não estiver pulando ou caindo
+        print('cond1')
         if self.state == STILL:
+            print('cond2')
             self.vel_y -= JUMP_SIZE
             self.state = JUMPING
