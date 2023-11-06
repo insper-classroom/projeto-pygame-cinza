@@ -24,6 +24,13 @@ class Jogador(pygame.sprite.Sprite):
         else:
             return False
 
+    def jump(self):
+        # Só pode pular se ainda não estiver pulando ou caindo e não estiver na escada
+        if self.state == STILL:
+            if not self.colisao_escada():
+                self.vel_y -= JUMP_SIZE
+                self.state = JUMPING
+                return True
 
     def update(self):
         if not self.colisao_escada():
@@ -56,12 +63,8 @@ class Jogador(pygame.sprite.Sprite):
             if colisoes_fire_ball:
                 self.dt = now
                 print('antes:', self.vidas)
-                self.vidas -= 1
+                if self.state == JUMPING:
+                    pass
+                else:
+                    self.vidas -= 1
                 print('depois:', self.vidas)
-
-    def jump(self):
-        # Só pode pular se ainda não estiver pulando ou caindo e não estiver na escada
-        if self.state == STILL:
-            if not self.colisao_escada():
-                self.vel_y -= JUMP_SIZE
-                self.state = JUMPING

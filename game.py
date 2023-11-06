@@ -91,7 +91,11 @@ def inicializa():
     # Bolas de fogo
     # fire_ball = []
     for i in range(5):
-        Fireball(state['grupos'], assets['fire_ball'], list(retangulos.values())[i].x, list(retangulos.values())[i].y - list(retangulos.values())[i].height, 3 if i % 2 == 0 else -3)
+        Fireball(
+            state['grupos'], assets['fire_ball'], list(retangulos.values())[i].x, 
+            list(retangulos.values())[i].y - list(retangulos.values())[i].height,
+            1 if i % 2 == 0 else -1
+            )
     #     fire_ball.append({
     #     'pos_fire_ball': [list(retangulos.values())[i].x, list(retangulos.values())[i].y - list(retangulos.values())[i].height],
     #     'vel_fire_ball': [180 if i % 2 == 0 else -180,0],
