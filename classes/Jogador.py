@@ -15,8 +15,17 @@ class Jogador(pygame.sprite.Sprite):
         self.state = STILL
         self.grupos['all_sprites'].add(self)
 
+    def colisao_escada(self):
+        colisoes = pygame.sprite.spritecollide(self, self.grupos['escadas'], False)
+        if colisoes:
+            print('colisao escada')
+            return True
+        else:
+            return False
+
     def update(self):
-        self.vel_y += G
+        if not self.colisao_escada():
+            self.vel_y += G 
 
         if self.vel_y > 0:
             self.state = FALLING
