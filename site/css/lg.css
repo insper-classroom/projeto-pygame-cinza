@@ -262,6 +262,29 @@ a.nav-link:focus{
 #about{
   background-color: #261D54;
 }
+#log-table{
+  margin-top: 20px;
+  border-collapse: collapse;
+  width: 100%;
+}
+#log-table th,
+#log-table td {
+    border: 1px solid #1a114bc5;
+    padding: 8px;
+    text-align: justify;
+}
+
+#log-table th{
+    text-align: center;
+}
+
+#log-table td{
+    color: white;
+}
+
+#log-table th {
+    background-color: #1a114bc5;
+}
 section#about{
   padding-bottom: 5.8em;
 }
