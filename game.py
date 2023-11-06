@@ -106,6 +106,8 @@ def inicializa():
     # Instancia Escada
     for escada in escadas.values():
         Escada(state['grupos'], escada)
+    
+    
 
     return window, assets, state, retangulos, escadas, mario
 
@@ -221,7 +223,7 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
                     state['jogador'].vel_x += VEL_X
 
             if event.key == pygame.K_UP:  
-                # if colisao_escada(state, window, assets, mario, escadas):
+                if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
                     state['jogador'].state = CLIMBING
                     state['jogador'].vel_y -= VEL_X
