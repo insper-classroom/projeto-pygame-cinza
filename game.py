@@ -3,6 +3,7 @@ from random import randint
 from time import sleep
 from classes.Plataformas import Plataforma
 from classes.Jogador import Jogador
+from classes.Escadas import Escada
 from constantes import *
 
 # Inicializa o Pygame e carrega os recursos necessários
@@ -21,6 +22,7 @@ def inicializa():
    
     state['grupos'] = {
         'plataformas': pygame.sprite.Group(),
+        'escadas': pygame.sprite.Group(),
         'all_sprites': pygame.sprite.Group(),
         'fire_ball': pygame.sprite.Group()
     }
@@ -58,8 +60,10 @@ def inicializa():
     state['pos_mario'] = [0, 840]
     state['vel_mario'] = [0, 0]
     state['estado'] = STILL
-    state['jogador'] = Jogador(mario, state['grupos'], state['pos_mario'][0], state['pos_mario'][1])
 
+    # Instancia o Jogador
+    state['jogador'] = Jogador(mario, state['grupos'], state['pos_mario'][0], state['pos_mario'][1])
+    state['clock'] =  pygame.time.Clock()
 
     # Plataformas do jogo
     retangulos = {
@@ -96,8 +100,14 @@ def inicializa():
     
 
     # Instancia Plataforma
-    for retangulo in retangulos:
+    for retangulo in retangulos.values():
         Plataforma(state['grupos'], retangulo)
+
+    # Instancia Escada
+    for escada in escadas.values():
+        Escada(state['grupos'], escada)
+    
+    
 
     return window, assets, state, retangulos, escadas, mario
 
@@ -172,14 +182,14 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
     state['t2'] = 0
 
     # Atualiza a posição da jogador baseada na velocidade
-    posicao_x = state['pos_mario'][0]
-    posicao_y = state['pos_mario'][1]
+    posicao_x = state['jogador'].rect.x
+    posicao_y = state['jogador'].rect.y
     v_x = state['jogador'].vel_x
     v_y = state['jogador'].vel_y
     prox_posicao_x = posicao_x + (v_x * dt)
     prox_posicao_y = posicao_y + (v_y * dt) + ((G / 2) * (dt ** 2))
-    state['pos_mario'][0] = prox_posicao_x
-    state['pos_mario'][1] = prox_posicao_y
+    state['jogador'].rect.x = prox_posicao_x
+    state['jogador'].rect.y = prox_posicao_y
 
     for fire_ball in state['fire_ball']:
         # Atualiza a posição do fire_ball
@@ -201,45 +211,59 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
             return False
         
         elif event.type == pygame.KEYDOWN:
+
             if event.key == pygame.K_LEFT:
+                state['jogador'].state = RUN
+                state['mario'] = mario['running_reverse']
                 state['jogador'].vel_x -= VEL_X
 
             elif event.key == pygame.K_RIGHT:
+                    state['jogador'].state = RUN
                     state['mario'] = mario['running']
                     state['jogador'].vel_x += VEL_X
 
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
-                    state['estado'] = CLIMBING
-                    state['vel_mario'][1] -= 80
-                    state['vel_mario'][0] = 0
+                    state['jogador'].state = CLIMBING
+                    state['jogador'].vel_y -= VEL_X
+                    # state['vel_mario'][0] = 0
 
             if event.key == pygame.K_DOWN:  
                 if colisao_escada(state, window, assets, mario, escadas):
                     state['mario'] = mario['climbing1']
-                    state['estado'] = CLIMBING
-                    state['vel_mario'][1] += 80
-                    state['vel_mario'][0] = 0
+                    state['jogador'].state = CLIMBING
+                    state['jogador'].vel_y += 80
+                    state['jogador'].vel_x = 0
 
             if event.key == pygame.K_SPACE:
-                if state['estado'] == STILL:
-                    pulo(window, assets, retangulos, escadas, state, mario)
+                if state['jogador'].state == STILL:
+                    state['jogador'].jump()
+
 
         elif event.type == pygame.KEYUP:
+
             if event.key == pygame.K_LEFT:
+                    state['jogador'].vel_x = 0
                     state['mario'] = mario['standing']
-                    state['vel_mario'][0] += 145
+                    state['jogador'].state = STILL
+
             elif event.key == pygame.K_RIGHT:
+                    state['jogador'].vel_x = 0
                     state['mario'] = mario['standing']
-                    state['vel_mario'][0] -= 145
+                    state['jogador'].state = STILL
 
             if event.key == pygame.K_UP:  
                 if colisao_escada(state, window, assets, mario, escadas):
-                    state['vel_mario'][1] += 80 
+                    state['jogador'].vel_y = 0 
+                    state['mario'] = mario['standing']
+                    state['jogador'].state = STILL
+
             if event.key == pygame.K_DOWN:  
                 if colisao_escada(state, window, assets, mario, escadas):
-                    state['vel_mario'][1] -= 80
+                    state['jogador'].vel_y = 0
+                    state['mario'] = mario['standing']
+                    state['jogador'].state = STILL
 
      # Atualiza a posição da jogador baseada na velocidade
     posicao_x = state['pos_mario'][0]
@@ -256,10 +280,10 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
         state['estado'] = STILL
         state['mario'] = mario['standing']
     
-    v_x = state['vel_mario'][0]
-    v_y = state['vel_mario'][1]
-    prox_posicao_x = posicao_x + (v_x * dt)
-    prox_posicao_y = posicao_y + (v_y*dt)
+    # v_x = state['vel_mario'][0]
+    # v_y = state['vel_mario'][1]
+    # prox_posicao_x = posicao_x + (v_x * dt)
+    # prox_posicao_y = posicao_y + (v_y*dt)
     
     state['pos_mario'][0] = prox_posicao_x
     state['pos_mario'][1] = prox_posicao_y
@@ -275,6 +299,7 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
         state['pos_mario'][1] = 880
 
     state['rect_mario'].x,state['rect_mario'].y = state['pos_mario']
+    state['jogador'].update()
 
 
 
@@ -303,7 +328,8 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
         window.blit(assets['fire_ball'], fire_ball['pos_fire_ball'])
 
     # window.blit(assets['gorila'],(0,215))   # Desenha o gorila
-    window.blit(state['mario'],state['pos_mario'])  # Desenha o jogador
+
+    window.blit(state['jogador'].image, state['jogador'].rect)  # Desenha o jogador
 
     pygame.display.update()  # Atualiza a tela
 
@@ -311,6 +337,7 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
 def game_loop(window, assets, state, retangulos, escadas, mario):
     
     while recebe_eventos(state, window, mario, assets, retangulos, escadas):  # Continua recebendo eventos e desenhando na tela até que o usuário feche a janela do jogo
+        state['clock'].tick(60)
         desenha(window, assets, state, retangulos, escadas, mario)
 
 if __name__ == '__main__':
