@@ -5,5 +5,5 @@ FALLING = 2
 CLIMBING = 3
 RUN = False
 G = 2
-JUMP_SIZE = 10
+JUMP_SIZE = 12
 VEL_X = 3

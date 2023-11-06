@@ -8,7 +8,3 @@ class Escada(pygame.sprite.Sprite):
         self.rect = escada
         grupos['escadas'].add(self)
 
-    def colisao_escada(self):
-        colisoes = pygame.sprite.spritecollide(self, self.grupos['escadas'], False)
-        for colisao in colisoes:
-            self.state = CLIMBING
