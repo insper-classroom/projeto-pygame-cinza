@@ -45,7 +45,7 @@ def inicializa():
     assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
 
     assets['fire_ball'] = pygame.image.load('assets/images/fireball.png')
-    assets['fire_ball'] = pygame.transform.scale(assets['fire_ball'],(20,20))
+    assets['fire_ball'] = pygame.transform.scale(assets['fire_ball'],(30,30))
 
     # Imagens usadas para o jogador
     mario = {
