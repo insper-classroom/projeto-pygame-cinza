@@ -1,0 +1,9 @@
+DIMENSOES = (720, 950)  # Define as dimensões da janela do jogo
+STILL = 0
+JUMPING = 1
+FALLING = 2
+CLIMBING = 3
+RUN = False
+G = 18
+JUMP_SIZE = 0.5
+VEL_X = 145
