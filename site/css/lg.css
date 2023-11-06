@@ -2,6 +2,11 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body{
+  height: 100%;
 }
 body{
   color: #090b08;
@@ -110,6 +115,10 @@ header:before{
   background-color: #1a114bc5;
   width: 100%;
   height: 68%;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   z-index: -1;
   -webkit-box-shadow: 0px 7px 5px 0px rgba(0,0,0,0.22);
   -moz-box-shadow: 0px 7px 5px 0px rgba(0,0,0,0.22);
@@ -262,6 +271,29 @@ a.nav-link:focus{
 #about{
   background-color: #261D54;
 }
+#log-table{
+  margin-top: 20px;
+  border-collapse: collapse;
+  width: 100%;
+}
+#log-table th,
+#log-table td {
+    border: 1px solid #1a114bc5;
+    padding: 8px;
+    text-align: justify;
+}
+
+#log-table th{
+    text-align: center;
+}
+
+#log-table td{
+    color: white;
+}
+
+#log-table th {
+    background-color: #1a114bc5;
+}
 section#about{
   padding-bottom: 5.8em;
 }
@@ -408,14 +440,14 @@ input{
   .navbar{
     display: flex;
     position: relative;
-    height: auto;
-    width: auto;
+    height: 20%;
+    width: 20%;
     background-color: transparent;
     z-index: 1;
   }
   .menu{
     flex-direction: row;
-    padding: 0;
+    /* padding: 0; */
     justify-content: flex-end;
   }
   .social-menu{
