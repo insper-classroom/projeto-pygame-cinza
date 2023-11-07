@@ -9,12 +9,15 @@ from constantes import *
 
 # Inicializa o Pygame e carrega os recursos necessários
 def inicializa():
+
     pygame.init()  # Inicializa o Pygame
     
+
     # Cria a janela do jogo e preenche com preto
     window = pygame.display.set_mode(DIMENSOES, vsync=True, flags=pygame.SCALED)
     window.fill((0, 0, 0))
     pygame.display.set_caption('First game')  # Define o título da janela
+
 
     # Inicializa o estado do jogo
     state = {
@@ -23,29 +26,39 @@ def inicializa():
    
     state['grupos'] = {
         'plataformas': pygame.sprite.Group(),
+
         'escadas': pygame.sprite.Group(),
+
         'all_sprites': pygame.sprite.Group(),
+
         'fire_ball': pygame.sprite.Group()
     }
-    state['vidas'] = 3
+
+    state['vidas'] = 30
+
+    state['estado_tela'] = 0
+
 
     # Carrega os assets do jogo
     assets = {}
-    assets['background'] = pygame.image.load('assets/img/background.png').convert_alpha()
-    assets['background'] = pygame.transform.scale(assets['background'], DIMENSOES)
 
-    assets['ponte'] = pygame.image.load('assets/img/bridge.png') 
-    assets['ponte'] = pygame.transform.scale(assets['ponte'], (90, 50))
+    assets['background'] = pygame.transform.scale(pygame.image.load('assets/img/background.png').convert_alpha(), DIMENSOES)
+
+    assets['ponte'] = pygame.transform.scale(pygame.image.load('assets/img/bridge.png'), (90, 50))
     
-    assets['coracao'] = pygame.image.load('assets/images/heart.png')
-    assets['coracao'] = pygame.transform.scale(assets['coracao'], (30, 30))
+    assets['coracao'] = pygame.transform.scale(pygame.image.load('assets/images/heart.png'), (30, 30))
+
+    assets['gorila'] = pygame.transform.scale(pygame.image.load('assets/images/dk/dk2.png'), (100, 100))
+
+    assets['fire_ball'] = pygame.transform.scale(pygame.image.load('assets/images/fireball.png'), (30, 30))
+
+    assets['welcome'] = pygame.transform.scale(pygame.image.load('assets/images/welcome.png').convert_alpha(), DIMENSOES)
+
+    assets['win'] = pygame.transform.scale(pygame.image.load('assets/images/win_screen.png').convert_alpha(), DIMENSOES)
+
+    assets['game_over'] = pygame.transform.scale(pygame.image.load('assets/images/game_over.png').convert_alpha(), DIMENSOES)
 
 
-    assets['gorila'] = pygame.image.load('assets/images/dk/dk2.png')
-    assets['gorila'] = pygame.transform.scale(assets['gorila'],(100,100))
-
-    assets['fire_ball'] = pygame.image.load('assets/images/fireball.png')
-    assets['fire_ball'] = pygame.transform.scale(assets['fire_ball'],(30,30))
 
     # Imagens usadas para o jogador
     mario = {
@@ -63,18 +76,18 @@ def inicializa():
     state['estado'] = STILL
 
     # Instancia o Jogador
-    state['jogador'] = Jogador(mario, state['grupos'], state['pos_mario'][0], state['pos_mario'][1], state['vidas'])
+    state['jogador'] = Jogador(mario, state['grupos'], state['pos_mario'][0], state['pos_mario'][1], state['vidas'], state['estado_tela'])
     state['clock'] =  pygame.time.Clock()
 
     # Plataformas do jogo
     retangulos = {
-    'retangulo': pygame.Rect((0, 312), (665, 29)),
-    'retangulo1': pygame.Rect((52, 405), (665, 29)),
-    'retangulo2': pygame.Rect((0, 528), (665, 29)),
-    'retangulo3': pygame.Rect((52, 650), (665, 29)),
-    'retangulo4': pygame.Rect((0, 777), (665, 20)),
-    'retangulo5': pygame.Rect((0, 895), (720, 29)),
-    'retangulo6': pygame.Rect((282, 211), (153, 28)),
+    'retangulo': pygame.Rect((0, 312), (665, 10)),
+    'retangulo1': pygame.Rect((52, 405), (665, 10)),
+    'retangulo2': pygame.Rect((0, 528), (665, 10)),
+    'retangulo3': pygame.Rect((52, 650), (665, 10)),
+    'retangulo4': pygame.Rect((0, 773), (665, 10)),
+    'retangulo5': pygame.Rect((0, 895), (720, 10)),
+    'retangulo6': pygame.Rect((282, 209), (153, 10)),
     }
 
     # Escadas do jogo
@@ -125,6 +138,13 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
             return False
         
         elif event.type == pygame.KEYDOWN:
+
+            if event.key == pygame.K_q:
+                return False
+
+            if event.key == pygame.K_p:
+                state['estado_tela'] = 1
+                
 
             if event.key == pygame.K_LEFT:
                 state['jogador'].state = RUN
@@ -181,26 +201,53 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
 
     state['grupos']['all_sprites'].update()
 
+    if state['jogador'].vidas == 0:
+        state['estado_tela'] = 2
+    
+    if (
+        state['jogador'].rect.y == 151 and
+        state['jogador'].rect.x < 343
+         ):
+        state['estado_tela'] = 3
+    print(state['jogador'].rect.y)
+    print(state['jogador'].rect.x)
+    
     return True
 
 
 def desenha(window, assets, state, retangulos, escadas, mario ):
     
+    # Tela de apresentação
+    window.blit(assets['welcome'], (0, 0))
 
-    # Desenha as escadas
-    for escada in escadas.values():
-        pygame.draw.rect(window, 'blue', escada)
+    # Tela principal do jogo
+    if state['estado_tela'] == 1:
+        # Desenha as escadas
+        window.blit(assets['background'], (0, 0))
+        for escada in escadas.values():
+            pygame.draw.rect(window, 'blue', escada)
 
-    # Desenha o background
-    window.blit(assets['background'], (0, 0))
+        for plataforma in retangulos.values():
+            pygame.draw.rect(window, 'blue', plataforma)
 
-    
-    # Desenha os corações
-    for i in range(0, 30 * state['jogador'].vidas, 30):
-        window.blit(assets['coracao'], (i, 20))
+        # Desenha o background
 
-    # Desenha o jogador
-    state['grupos']['all_sprites'].draw(window)  
+        
+        # Desenha os corações
+        for i in range(0, 30 * state['jogador'].vidas, 30):
+            window.blit(assets['coracao'], (i, 20))
+
+        # Desenha o jogador
+        state['grupos']['all_sprites'].draw(window)  
+
+    # Tela de Game Over
+    if state['estado_tela'] == 2:
+        window.blit(assets['game_over'], (0, 0))
+
+    # Tela de vitória
+    if state['estado_tela'] == 3:
+        window.blit(assets['win'], (0, 0))
+
 
     pygame.display.update()  # Atualiza a tela
 
@@ -214,4 +261,5 @@ def game_loop(window, assets, state, retangulos, escadas, mario):
 if __name__ == '__main__':
     
     w, assets, state, retangulos, escadas, mario = inicializa()  # Inicializa o Pygame e carrega os recursos necessários
-    game_loop(w, assets, state, retangulos, escadas, mario)  # Inicia o loop principal do jogo
+    if state['estado'] != DEAD:
+        game_loop(w, assets, state, retangulos, escadas, mario)  # Inicia o loop principal do jogo
