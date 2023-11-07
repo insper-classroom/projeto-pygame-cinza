@@ -2,7 +2,7 @@ import pygame
 from constantes import *
 
 class Jogador(pygame.sprite.Sprite):
-    def __init__(self, imagens, grupos, x, y):
+    def __init__(self, imagens, grupos, x, y, vidas):
         super().__init__()
         self.imagens = imagens
         self.image = imagens['standing']
@@ -12,16 +12,27 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.y = y
         self.vel_x = 0
         self.vel_y = 0
+        self.vidas = vidas
         self.state = STILL
+        self.dt = 0
         self.grupos['all_sprites'].add(self)
 
     def colisao_escada(self):
         colisoes = pygame.sprite.spritecollide(self, self.grupos['escadas'], False)
         if colisoes:
-            print('colisao escada')
             return True
         else:
             return False
+
+    def jump(self):
+        # Só pode pular se ainda não estiver pulando ou caindo e não estiver na escada
+        if self.state == STILL:
+            if not self.colisao_escada():
+                self.vel_y -= JUMP_SIZE
+                self.state = JUMPING
+                return True
+        if self.jump():
+            self.state = CLIMBING
 
     def update(self):
         if not self.colisao_escada():
@@ -47,10 +58,15 @@ class Jogador(pygame.sprite.Sprite):
         elif self.rect.right >= DIMENSOES[0]:
             self.rect.right = DIMENSOES[0] - 1
 
-    def jump(self):
-        # Só pode pular se ainda não estiver pulando ou caindo
-        print('cond1')
-        if self.state == STILL:
-            print('cond2')
-            self.vel_y -= JUMP_SIZE
-            self.state = JUMPING
+        now = pygame.time.get_ticks()
+
+        if now - self.dt > 2000:
+            colisoes_fire_ball = pygame.sprite.spritecollide(self, self.grupos['fire_ball'], False)
+            if colisoes_fire_ball:
+                self.dt = now
+                print('antes:', self.vidas)
+                if self.state == JUMPING:
+                    pass
+                else:
+                    self.vidas -= 1
+                print('depois:', self.vidas)
