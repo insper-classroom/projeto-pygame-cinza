@@ -2,7 +2,7 @@ import pygame
 from constantes import *
 
 class Jogador(pygame.sprite.Sprite):
-    def __init__(self, imagens, grupos, x, y, vidas):
+    def __init__(self, imagens, grupos, x, y, vidas, tela):
         super().__init__()
         self.imagens = imagens
         self.image = imagens['standing']
@@ -15,6 +15,7 @@ class Jogador(pygame.sprite.Sprite):
         self.vidas = vidas
         self.state = STILL
         self.dt = 0
+        self.tela = tela
         self.grupos['all_sprites'].add(self)
 
     def colisao_escada(self):
@@ -60,13 +61,13 @@ class Jogador(pygame.sprite.Sprite):
 
         now = pygame.time.get_ticks()
 
+        # Perde vidas
         if now - self.dt > 2000:
             colisoes_fire_ball = pygame.sprite.spritecollide(self, self.grupos['fire_ball'], False)
             if colisoes_fire_ball:
                 self.dt = now
                 print('antes:', self.vidas)
-                if self.state == JUMPING:
-                    pass
-                else:
+                if self.state != JUMPING:
                     self.vidas -= 1
+
                 print('depois:', self.vidas)
