@@ -67,9 +67,7 @@ class Jogador(pygame.sprite.Sprite):
             if colisoes_fire_ball:
                 self.dt = now
                 print('antes:', self.vidas)
-                if self.state == JUMPING:
-                    pass
-                else:
+                if self.state != JUMPING:
                     self.vidas -= 1
 
                 print('depois:', self.vidas)

@@ -7,7 +7,7 @@ class Fireball(pygame.sprite.Sprite):
         self.image = image
         self.rect = image.get_rect()
         self.rect.x = x
-        self.rect.y = y
+        self.rect.y = y - 15
         self.vel = vel
         self.count = 0
         self.grupos = grupos

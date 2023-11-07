@@ -6,6 +6,6 @@ CLIMBING = 3
 DEAD = 4
 RUN = False
 G = 1
-
+HAPPY = 5
 JUMP_SIZE = 7
 VEL_X = 3

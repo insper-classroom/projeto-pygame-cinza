@@ -40,6 +40,8 @@ def inicializa():
 
     state['restart'] = False
 
+    state['princesa'] = STILL
+
 
     # Carrega os assets do jogo
     assets = {}
@@ -50,7 +52,11 @@ def inicializa():
     
     assets['coracao'] = pygame.transform.scale(pygame.image.load('assets/images/heart.png'), (30, 30))
 
-    assets['gorila'] = pygame.transform.scale(pygame.image.load('assets/images/dk/dk2.png'), (100, 100))
+    assets['princesa1'] = pygame.transform.scale(pygame.image.load('assets/images/peach/peach1.png'), (60, 60))
+
+    assets['princesa2'] = pygame.transform.scale(pygame.image.load('assets/images/peach/peach2.png'), (60, 60))
+
+    assets['pos_princesa'] = (282, 150)
 
     assets['fire_ball'] = pygame.transform.scale(pygame.image.load('assets/images/fireball.png'), (30, 30))
 
@@ -83,27 +89,27 @@ def inicializa():
 
     # Plataformas do jogo
     retangulos = {
-    'retangulo': pygame.Rect((0, 312), (665, 10)),
-    'retangulo1': pygame.Rect((52, 405), (665, 10)),
-    'retangulo2': pygame.Rect((0, 528), (665, 10)),
-    'retangulo3': pygame.Rect((52, 650), (665, 10)),
-    'retangulo4': pygame.Rect((0, 773), (665, 10)),
-    'retangulo5': pygame.Rect((0, 895), (720, 10)),
-    'retangulo6': pygame.Rect((282, 209), (153, 10)),
+    'retangulo1': pygame.Rect((0, 312), (665, 10)),
+    'retangulo2': pygame.Rect((52, 405), (665, 10)),
+    'retangulo3': pygame.Rect((0, 528), (665, 10)),
+    'retangulo4': pygame.Rect((52, 650), (665, 10)),
+    'retangulo5': pygame.Rect((0, 773), (665, 10)),
+    'retangulo6': pygame.Rect((0, 895), (720, 10)),
+    'retangulo7': pygame.Rect((282, 209), (153, 5)),
     }
 
     # Escadas do jogo
     escadas = {
-    'escada2': pygame.Rect((410, 214), (28, 110)),
-    'escada3': pygame.Rect((623, 319), (28, 100)),
-    'escada4': pygame.Rect((71, 412), (28, 83)),
-    'escada5': pygame.Rect((595, 530), (28, 83)),
-    'escada6': pygame.Rect((99, 655), (28, 83)),
-    'escada7': pygame.Rect((554, 775), (38, 80))
+    'escada1': pygame.Rect((414, 214), (15, 110)),
+    'escada3': pygame.Rect((628, 319), (15, 100)),
+    'escada4': pygame.Rect((76, 412), (15, 83)),
+    'escada5': pygame.Rect((600, 530), (15, 83)),
+    'escada6': pygame.Rect((104, 655), (15, 83)),
+    'escada7': pygame.Rect((559, 775), (15, 80))
     }
 
     # Bolas de fogo
-    for i in range(5):
+    for i in range(1, 5):
         Fireball(
             state['grupos'], assets['fire_ball'], list(retangulos.values())[i].x, 
             list(retangulos.values())[i].y - list(retangulos.values())[i].height,
@@ -122,12 +128,6 @@ def inicializa():
     return window, assets, state, retangulos, escadas, mario
 
 def re_inicializa():
-
-
-    
-
-
-
 
     # Inicializa o estado do jogo
     state = {
@@ -150,6 +150,8 @@ def re_inicializa():
 
     state['restart'] = False
 
+    state['princesa'] = STILL
+
 
     # Carrega os assets do jogo
     assets = {}
@@ -160,7 +162,11 @@ def re_inicializa():
     
     assets['coracao'] = pygame.transform.scale(pygame.image.load('assets/images/heart.png'), (30, 30))
 
-    assets['gorila'] = pygame.transform.scale(pygame.image.load('assets/images/dk/dk2.png'), (100, 100))
+    assets['princesa1'] = pygame.transform.scale(pygame.image.load('assets/images/peach/peach1.png'), (60, 60))
+
+    assets['princesa2'] = pygame.transform.scale(pygame.image.load('assets/images/peach/peach2.png'), (60, 60))
+
+    assets['pos_princesa'] = (282, 150)
 
     assets['fire_ball'] = pygame.transform.scale(pygame.image.load('assets/images/fireball.png'), (30, 30))
 
@@ -193,27 +199,27 @@ def re_inicializa():
 
     # Plataformas do jogo
     retangulos = {
-    'retangulo': pygame.Rect((0, 312), (665, 10)),
-    'retangulo1': pygame.Rect((52, 405), (665, 10)),
-    'retangulo2': pygame.Rect((0, 528), (665, 10)),
-    'retangulo3': pygame.Rect((52, 650), (665, 10)),
-    'retangulo4': pygame.Rect((0, 773), (665, 10)),
-    'retangulo5': pygame.Rect((0, 895), (720, 10)),
-    'retangulo6': pygame.Rect((282, 209), (153, 10)),
+    'retangulo1': pygame.Rect((0, 312), (665, 10)),
+    'retangulo2': pygame.Rect((52, 405), (665, 10)),
+    'retangulo3': pygame.Rect((0, 528), (665, 10)),
+    'retangulo4': pygame.Rect((52, 650), (665, 10)),
+    'retangulo5': pygame.Rect((0, 773), (665, 10)),
+    'retangulo6': pygame.Rect((0, 895), (720, 10)),
+    'retangulo7': pygame.Rect((282, 209), (153, 5)),
     }
 
     # Escadas do jogo
     escadas = {
-    'escada2': pygame.Rect((410, 214), (28, 110)),
-    'escada3': pygame.Rect((623, 319), (28, 100)),
-    'escada4': pygame.Rect((71, 412), (28, 83)),
-    'escada5': pygame.Rect((595, 530), (28, 83)),
-    'escada6': pygame.Rect((99, 655), (28, 83)),
-    'escada7': pygame.Rect((554, 775), (38, 80))
+    'escada1': pygame.Rect((414, 214), (15, 110)),
+    'escada3': pygame.Rect((628, 319), (15, 100)),
+    'escada4': pygame.Rect((76, 412), (15, 83)),
+    'escada5': pygame.Rect((600, 530), (15, 83)),
+    'escada6': pygame.Rect((104, 655), (15, 83)),
+    'escada7': pygame.Rect((559, 775), (15, 80))
     }
 
     # Bolas de fogo
-    for i in range(5):
+    for i in range(1, 5):
         Fireball(
             state['grupos'], assets['fire_ball'], list(retangulos.values())[i].x, 
             list(retangulos.values())[i].y - list(retangulos.values())[i].height,
@@ -230,6 +236,7 @@ def re_inicializa():
         Escada(state['grupos'], escada)
 
     return assets, state, retangulos, escadas, mario
+
 
 
 # Recebe eventos do Pygame
@@ -253,14 +260,12 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
 
             if event.key == pygame.K_q :
                 return False
-            # elif event.key == pygame.K_q and state['restart'] == True:
 
             if event.key == pygame.K_p:
                 state['estado_tela'] = 1
 
-            if event.key == pygame.K_r and state['jogador'].vidas == 0:
+            if (event.key == pygame.K_r and state['jogador'].vidas == 0) or (event.key == pygame.K_r and state['estado_tela'] == 3):
                 state['restart'] = True
-                print('rrr')
                 return False
 
             if event.key == pygame.K_LEFT:
@@ -320,12 +325,13 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
 
     if state['jogador'].vidas == 0:
         state['estado_tela'] = 2
+
+    print(state['jogador'].rect.y)
     
-    if (
-        state['jogador'].rect.y == 151 and
-        state['jogador'].rect.x < 343
-         ):
-        state['estado_tela'] = 3
+    if state['jogador'].rect.y <= 151:
+            state['princesa'] == HAPPY
+            if state['jogador'].rect.x < 347:
+                state['estado_tela'] = 3
 
     
     return True
@@ -339,7 +345,6 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
     # Tela principal do jogo
     if state['estado_tela'] == 1:
         # Desenha as escadas
-        window.blit(assets['background'], (0, 0))
         for escada in escadas.values():
             pygame.draw.rect(window, 'blue', escada)
 
@@ -347,14 +352,22 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
             pygame.draw.rect(window, 'blue', plataforma)
 
         # Desenha o background
+        window.blit(assets['background'], (0, 0))
 
         
         # Desenha os corações
         for i in range(0, 30 * state['jogador'].vidas, 30):
             window.blit(assets['coracao'], (i, 20))
 
-        # Desenha o jogador
+        # Desenha todas as sprites
         state['grupos']['all_sprites'].draw(window)  
+
+        # Desenha a princesa
+        if state['princesa'] == STILL:
+            window.blit(assets['princesa1'], assets['pos_princesa'])
+        elif state['princesa'] == HAPPY:
+            window.blit(assets['princesa2'], assets['pos_princesa'])
+        
 
     # Tela de Game Over
     if state['estado_tela'] == 2:
