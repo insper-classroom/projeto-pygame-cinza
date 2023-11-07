@@ -1,4 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/qMYffwgb)
 #Donkey Fire
 Este Jogo é uma réplica adaptada do jogo Donkey Kong usando a biblioteca Pygame. Desenvolvido pelos alunos [**Isabela Rodrigues**](https://www.linkedin.com/in/isabela-rodrigues-9a7842191/) e [**Gabriel Alencar**](https://www.linkedin.com/in/gabriel-pradyumna-alencar-costa-8887a6201/).
 
