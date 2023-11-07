@@ -66,6 +66,12 @@ def inicializa():
 
     assets['game_over'] = pygame.transform.scale(pygame.image.load('assets/images/game_over.png').convert_alpha(), DIMENSOES)
 
+    assets['dormes'] = pygame.transform.scale(pygame.image.load('assets/images/dormes.png').convert_alpha(), DIMENSOES)
+
+    assets['barril'] = pygame.transform.scale(pygame.image.load('assets/images/barril.png').convert_alpha(), (70, 100))
+
+    assets['fogo'] = pygame.transform.scale(pygame.image.load('assets/images/fire.png').convert_alpha(), (100, 50))
+
 
 
     # Imagens usadas para o jogador
@@ -176,7 +182,11 @@ def re_inicializa():
 
     assets['game_over'] = pygame.transform.scale(pygame.image.load('assets/images/game_over.png').convert_alpha(), DIMENSOES)
 
+    assets['dormes'] = pygame.transform.scale(pygame.image.load('assets/images/dormes.png').convert_alpha(), DIMENSOES)
 
+    assets['barril'] = pygame.transform.scale(pygame.image.load('assets/images/barril.png').convert_alpha(), (70, 100))
+    
+    assets['fogo'] = pygame.transform.scale(pygame.image.load('assets/images/fire.png').convert_alpha(), (100, 50))
 
     # Imagens usadas para o jogador
     mario = {
@@ -332,7 +342,9 @@ def recebe_eventos(state, window, mario, assets, retangulos, escadas):
             state['princesa'] == HAPPY
             if state['jogador'].rect.x < 347:
                 state['estado_tela'] = 3
-
+    
+    if state['jogador'].rect.y > 835:
+        state['estado_tela'] = 4
     
     return True
 
@@ -359,6 +371,11 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
         for i in range(0, 30 * state['jogador'].vidas, 30):
             window.blit(assets['coracao'], (i, 20))
 
+        window.blit(assets['barril'], (0, 212))
+
+        for i in range(0, 270, 30):
+            window.blit(assets['fogo'], (70 + i, 265))
+
         # Desenha todas as sprites
         state['grupos']['all_sprites'].draw(window)  
 
@@ -376,6 +393,9 @@ def desenha(window, assets, state, retangulos, escadas, mario ):
     # Tela de vitória
     if state['estado_tela'] == 3:
         window.blit(assets['win'], (0, 0))
+
+    if state['estado_tela'] == 4:
+        window.blit(assets['dormes'], (0, 0))
 
 
     pygame.display.update()  # Atualiza a tela
