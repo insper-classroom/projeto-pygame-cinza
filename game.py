@@ -16,7 +16,7 @@ def inicializa():
     # Cria a janela do jogo e preenche com preto
     window = pygame.display.set_mode(DIMENSOES, vsync=True, flags=pygame.SCALED)
     window.fill((0, 0, 0))
-    pygame.display.set_caption('First game')  # Define o título da janela
+    pygame.display.set_caption('Donkey Fire')  # Define o título da janela
 
 
     # Inicializa o estado do jogo
@@ -34,7 +34,7 @@ def inicializa():
         'fire_ball': pygame.sprite.Group()
     }
 
-    state['vidas'] = 3
+    state['vidas'] = 5
 
     state['estado_tela'] = 0
 
@@ -72,6 +72,10 @@ def inicializa():
 
     assets['fogo'] = pygame.transform.scale(pygame.image.load('assets/images/fire.png').convert_alpha(), (100, 50))
 
+    # Carrega e toca a música de fundo
+    assets['background_music'] = 'assets/snd/Battle.mp3'
+    pygame.mixer.music.load(assets['background_music'])
+    pygame.mixer.music.play()
 
 
     # Imagens usadas para o jogador
