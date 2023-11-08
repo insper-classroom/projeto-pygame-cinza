@@ -34,7 +34,7 @@ def inicializa():
         'fire_ball': pygame.sprite.Group()
     }
 
-    state['vidas'] = 5
+    state['vidas'] = 4
 
     state['estado_tela'] = 0
 

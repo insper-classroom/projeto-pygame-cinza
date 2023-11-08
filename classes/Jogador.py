@@ -32,8 +32,8 @@ class Jogador(pygame.sprite.Sprite):
                 self.vel_y -= JUMP_SIZE
                 self.state = JUMPING
                 return True
-        if self.jump():
-            self.state = CLIMBING
+        # if self.jump():
+        #     self.state = CLIMBING
 
     def update(self):
         if not self.colisao_escada():
